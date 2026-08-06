@@ -90,7 +90,7 @@ export const DELETE = handler(async (_req: Request, { params }: Params) => {
   if (item._count.orderItems > 0) {
     await prisma.menuItem.update({
       where: { id },
-      data: { isAvailable: false, isFeatured: false },
+      data: { isArchived: true, isAvailable: false, isFeatured: false },
     });
     await invalidate(CACHE_KEYS.menu(item.restaurantId));
     await logActivity(user.id, "menu.item.retire", "MenuItem", id, { name: item.name });

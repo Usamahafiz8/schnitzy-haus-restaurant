@@ -19,6 +19,7 @@ export const GET = handler(async (req: Request, { params }: Params) => {
 
   const where: Prisma.MenuItemWhereInput = {
     restaurantId: id,
+    isArchived: false,
     ...(query.categoryId ? { categoryId: query.categoryId } : {}),
     ...(query.available !== undefined ? { isAvailable: query.available } : {}),
     ...(query.featured ? { isFeatured: true } : {}),

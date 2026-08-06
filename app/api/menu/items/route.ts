@@ -84,7 +84,7 @@ export const PATCH = handler(async (req: Request) => {
       prisma.menuItem.deleteMany({ where: { id: { in: deletable }, restaurantId } }),
       prisma.menuItem.updateMany({
         where: { id: { in: [...referencedIds] }, restaurantId },
-        data: { isAvailable: false, isFeatured: false },
+        data: { isArchived: true, isAvailable: false, isFeatured: false },
       }),
     ]);
 

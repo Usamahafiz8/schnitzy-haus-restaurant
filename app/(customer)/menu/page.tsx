@@ -39,7 +39,9 @@ export default async function MenuPage({
       orderBy: { displayOrder: "asc" },
     }),
     prisma.menuItem.findMany({
-      where: { restaurantId: restaurant.id },
+      // Archived dishes are off the menu for good; unavailable ones still
+      // show, greyed out, so regulars can see what's sold out today.
+      where: { restaurantId: restaurant.id, isArchived: false },
       orderBy: [{ displayOrder: "asc" }, { name: "asc" }],
     }),
   ]);

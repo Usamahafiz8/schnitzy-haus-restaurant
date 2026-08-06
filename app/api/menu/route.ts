@@ -15,6 +15,8 @@ export const GET = handler(async (req: Request) => {
 
   const where: Prisma.MenuItemWhereInput = {
     restaurantId,
+    // Public listing never surfaces archived dishes.
+    isArchived: false,
     ...(query.categoryId ? { categoryId: query.categoryId } : {}),
     ...(query.available !== undefined ? { isAvailable: query.available } : {}),
     ...(query.featured ? { isFeatured: true } : {}),

@@ -26,8 +26,10 @@ export type {
 
 export type AppLocale = "en" | "de";
 
-export const LOCALES: AppLocale[] = ["en", "de"];
-export const DEFAULT_LOCALE: AppLocale = "en";
+export const LOCALES: AppLocale[] = ["de", "en"];
+// The restaurant is in Frankfurt and the brand voice is German — an English
+// speaker switching once is a better default than a German one having to.
+export const DEFAULT_LOCALE: AppLocale = "de";
 
 /** Roles allowed into /admin. */
 export const STAFF_ROLES: Role[] = ["ADMIN", "STAFF", "KITCHEN", "DELIVERY"];

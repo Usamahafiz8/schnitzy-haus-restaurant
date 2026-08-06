@@ -56,6 +56,7 @@ export default async function MenuItemPage({ params }: Props) {
       categoryId: item.categoryId,
       id: { not: item.id },
       isAvailable: true,
+      isArchived: false,
     },
     take: 3,
     orderBy: { displayOrder: "asc" },

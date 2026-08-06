@@ -125,7 +125,7 @@ model User {
   phone         String?
   role          Role      @default(CUSTOMER)
   image         String?
-  locale        Locale    @default(en)
+  locale        Locale    @default(de)
   emailVerified DateTime?
   isDeleted     Boolean   @default(false)
 
@@ -395,7 +395,11 @@ model MenuItem {
   preparationTime Int     @default(15)
   displayOrder    Int     @default(0)
 
+  /// Temporarily sold out — still on the menu, shown greyed out.
   isAvailable   Boolean @default(true)
+  /// Taken off the menu for good. Hidden from customers, but kept so past
+  /// orders and best-seller analytics still resolve the dish.
+  isArchived    Boolean @default(false)
   isFeatured    Boolean @default(false)
   isVegan       Boolean @default(false)
   isVegetarian  Boolean @default(false)
@@ -414,7 +418,7 @@ model MenuItem {
   orderItems OrderItem[]
   favorites  Favorite[]
 
-  @@index([restaurantId, isAvailable])
+  @@index([restaurantId, isArchived, isAvailable])
   @@index([categoryId, displayOrder])
   @@map("menu_items")
 }

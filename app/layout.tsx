@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { Anton, DM_Sans, Kaushan_Script } from "next/font/google";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
 import { SessionProvider } from "next-auth/react";
@@ -6,14 +7,36 @@ import { Toaster } from "sonner";
 
 import "./globals.css";
 
+// Poster condensed for the big statements, brush script for the two
+// handwritten accents, and a humanist sans for everything you actually read.
+const display = Anton({
+  subsets: ["latin"],
+  weight: "400",
+  variable: "--font-display-face",
+  display: "swap",
+});
+
+const script = Kaushan_Script({
+  subsets: ["latin"],
+  weight: "400",
+  variable: "--font-script-face",
+  display: "swap",
+});
+
+const body = DM_Sans({
+  subsets: ["latin"],
+  variable: "--font-body",
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"),
   title: {
-    default: "Schnitzy Haus — hand-breaded schnitzel, ordered in seconds",
+    default: "Schnitzy Haus — Premium Burgers & Bowls in Frankfurt",
     template: "%s · Schnitzy Haus",
   },
   description:
-    "Order schnitzel for pickup or delivery, book a table, and earn points on every meal. Hand-breaded daily, fried to order.",
+    "Handgemachte Burger, knusprige Schnitzel, frische Zutaten und unverwechselbarer Geschmack. Bestell online zur Abholung oder Lieferung in Frankfurt.",
   manifest: "/manifest.webmanifest",
   appleWebApp: {
     capable: true,
@@ -23,8 +46,10 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     siteName: "Schnitzy Haus",
-    title: "Schnitzy Haus",
-    description: "Hand-breaded schnitzel, fried to order. Delivery, pickup and tables.",
+    locale: "de_DE",
+    title: "Schnitzy Haus — Premium Burgers & Bowls",
+    description:
+      "Frankfurts Home of Premium Burgers. Handgemacht, frisch zubereitet, schnell geliefert.",
   },
   formatDetection: { telephone: true, address: false },
 };
@@ -34,8 +59,8 @@ export const viewport: Viewport = {
   initialScale: 1,
   viewportFit: "cover",
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#fffdf9" },
-    { media: "(prefers-color-scheme: dark)", color: "#241f1b" },
+    { media: "(prefers-color-scheme: light)", color: "#fdf7f0" },
+    { media: "(prefers-color-scheme: dark)", color: "#231d1c" },
   ],
 };
 
@@ -48,7 +73,11 @@ export default async function RootLayout({
   const messages = await getMessages();
 
   return (
-    <html lang={locale} suppressHydrationWarning>
+    <html
+      lang={locale}
+      suppressHydrationWarning
+      className={`${display.variable} ${script.variable} ${body.variable}`}
+    >
       <body>
         <SessionProvider>
           <NextIntlClientProvider messages={messages} locale={locale}>

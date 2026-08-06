@@ -1,8 +1,16 @@
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
-import { ChefHat, Mail, MapPin, MessageCircle, Phone } from "lucide-react";
+import { Mail, MapPin, Phone } from "lucide-react";
 
-import { whatsAppLink } from "@/lib/whatsapp";
+import { LocaleSwitcher } from "@/components/shared/locale-switcher";
+import { Logo } from "@/components/shared/logo";
+import { FacebookIcon, InstagramIcon, TikTokIcon } from "@/components/shared/social-icons";
+
+const SOCIALS = [
+  { name: "Instagram", href: "https://instagram.com/schnitzyhaus", Icon: InstagramIcon },
+  { name: "Facebook", href: "https://facebook.com/schnitzyhaus", Icon: FacebookIcon },
+  { name: "TikTok", href: "https://tiktok.com/@schnitzyhaus", Icon: TikTokIcon },
+] as const;
 
 export async function SiteFooter({
   restaurant,
@@ -14,92 +22,152 @@ export async function SiteFooter({
     postalCode: string;
     phone: string;
     email: string;
-    whatsappNumber: string | null;
   };
 }) {
-  const t = await getTranslations("nav");
-  const tHome = await getTranslations("home");
+  const t = await getTranslations("footer");
+  const tNav = await getTranslations("nav");
+
+  const quickLinks = [
+    { href: "/", label: tNav("home") },
+    { href: "/menu", label: tNav("menu") },
+    { href: "/about", label: tNav("about") },
+    { href: "/locations", label: tNav("locations") },
+    { href: "/contact", label: tNav("contact") },
+  ];
+
+  // Germany requires an Impressum and these consumer-law pages on any
+  // commercial site — they are not optional decoration.
+  const legalLinks = [
+    { href: "/impressum", label: t("imprint") },
+    { href: "/datenschutz", label: t("privacy") },
+    { href: "/agb", label: t("terms") },
+    { href: "/widerrufsrecht", label: t("withdrawal") },
+    { href: "/lieferung-zahlung", label: t("shipping") },
+  ];
 
   return (
-    <footer className="mt-16 border-t border-border bg-muted/40 pb-24 md:pb-0">
-      <div className="mx-auto grid max-w-6xl gap-8 px-4 py-12 sm:grid-cols-2 lg:grid-cols-4">
-        <div className="space-y-3">
-          <div className="flex items-center gap-2 font-semibold">
-            <ChefHat className="size-5 text-primary" aria-hidden />
-            {restaurant.name}
-          </div>
-          <p className="text-sm text-muted-foreground">
-            Hand-breaded daily, fried to order, served with everything it deserves.
-          </p>
+    <footer className="mt-4 border-t border-border bg-cream-200 pb-24 md:pb-0">
+      <div className="mx-auto grid max-w-7xl gap-10 px-4 py-12 sm:grid-cols-2 sm:px-6 lg:grid-cols-[1.1fr_1fr_1fr_1.2fr_1fr]">
+        {/* ------------------------------------------------------------ brand */}
+        <div>
+          <Logo />
+
+          <ul className="mt-5 flex gap-3">
+            {SOCIALS.map(({ name, href, Icon }) => (
+              <li key={name}>
+                <a
+                  href={href}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  aria-label={`${t("followUs")} — ${name}`}
+                  className="flex size-9 items-center justify-center rounded-full text-foreground transition-colors hover:bg-primary hover:text-primary-foreground"
+                >
+                  <Icon className="size-5" />
+                </a>
+              </li>
+            ))}
+          </ul>
         </div>
 
-        <nav className="space-y-2 text-sm" aria-label="Footer">
-          <p className="font-medium">{t("menu")}</p>
-          <Link href="/menu" className="block text-muted-foreground hover:text-foreground">
-            {t("menu")}
-          </Link>
-          <Link href="/bookings" className="block text-muted-foreground hover:text-foreground">
-            {t("bookings")}
-          </Link>
-          <Link href="/loyalty" className="block text-muted-foreground hover:text-foreground">
-            {t("loyalty")}
-          </Link>
-          <Link href="/orders" className="block text-muted-foreground hover:text-foreground">
-            {t("orders")}
-          </Link>
+        {/* ------------------------------------------------------- quick links */}
+        <nav aria-labelledby="footer-quick">
+          <h2 id="footer-quick" className="font-display text-xs tracking-widest">
+            {t("quickLinks")}
+          </h2>
+          <ul className="mt-4 space-y-2 text-[13px]">
+            {quickLinks.map((link) => (
+              <li key={link.href}>
+                <Link
+                  href={link.href}
+                  className="text-muted-foreground transition-colors hover:text-primary"
+                >
+                  {link.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
         </nav>
 
-        <div className="space-y-2 text-sm">
-          <p className="font-medium">{tHome("visitUs")}</p>
-          <p className="flex items-start gap-2 text-muted-foreground">
-            <MapPin className="mt-0.5 size-4 shrink-0" aria-hidden />
-            <span>
-              {restaurant.address}
-              <br />
-              {restaurant.postalCode} {restaurant.city}
-            </span>
-          </p>
-          <Link
-            href="/location"
-            className="inline-block text-primary underline-offset-4 hover:underline"
-          >
-            {tHome("getDirections")}
-          </Link>
+        {/* ---------------------------------------------------------- legal */}
+        <nav aria-labelledby="footer-legal">
+          <h2 id="footer-legal" className="font-display text-xs tracking-widest">
+            {t("information")}
+          </h2>
+          <ul className="mt-4 space-y-2 text-[13px]">
+            {legalLinks.map((link) => (
+              <li key={link.href}>
+                <Link
+                  href={link.href}
+                  className="text-muted-foreground transition-colors hover:text-primary"
+                >
+                  {link.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
+
+        {/* --------------------------------------------------------- contact */}
+        <div>
+          <h2 className="font-display text-xs tracking-widest">{t("contact")}</h2>
+          <address className="mt-4 space-y-2 text-[13px] not-italic text-muted-foreground">
+            <p className="font-semibold text-foreground">{restaurant.name}</p>
+            <p className="flex items-start gap-2">
+              <MapPin className="mt-0.5 size-3.5 shrink-0" aria-hidden />
+              <span>
+                {restaurant.address}
+                <br />
+                {restaurant.postalCode} {restaurant.city}
+              </span>
+            </p>
+            <p>
+              <a
+                href={`tel:${restaurant.phone.replace(/\s/g, "")}`}
+                className="flex items-center gap-2 transition-colors hover:text-primary"
+              >
+                <Phone className="size-3.5 shrink-0" aria-hidden />
+                {restaurant.phone}
+              </a>
+            </p>
+            <p>
+              <a
+                href={`mailto:${restaurant.email}`}
+                className="flex items-center gap-2 break-all transition-colors hover:text-primary"
+              >
+                <Mail className="size-3.5 shrink-0" aria-hidden />
+                {restaurant.email}
+              </a>
+            </p>
+          </address>
         </div>
 
-        <div className="space-y-2 text-sm">
-          <p className="font-medium">{tHome("callUs")}</p>
-          <a
-            href={`tel:${restaurant.phone.replace(/\s/g, "")}`}
-            className="flex items-center gap-2 text-muted-foreground hover:text-foreground"
-          >
-            <Phone className="size-4" aria-hidden />
-            {restaurant.phone}
-          </a>
-          <a
-            href={`mailto:${restaurant.email}`}
-            className="flex items-center gap-2 text-muted-foreground hover:text-foreground"
-          >
-            <Mail className="size-4" aria-hidden />
-            {restaurant.email}
-          </a>
-          {restaurant.whatsappNumber && (
-            <a
-              href={whatsAppLink(restaurant.whatsappNumber)}
-              target="_blank"
-              rel="noreferrer noopener"
-              className="flex items-center gap-2 text-muted-foreground hover:text-foreground"
-            >
-              <MessageCircle className="size-4" aria-hidden />
-              {tHome("whatsappUs")}
-            </a>
-          )}
+        {/* ------------------------------------------------------------ hours */}
+        <div>
+          <h2 className="font-display text-xs tracking-widest">
+            {t("openingHours")}
+          </h2>
+          <p className="mt-4 text-[13px] text-muted-foreground">
+            {t("daysRange")}
+            <br />
+            {t("hoursRange")}
+          </p>
+
+          <p className="script mt-5 text-lg leading-tight text-primary">
+            {t("signOff")}{" "}
+            <span aria-hidden className="text-primary/70">
+              ♡
+            </span>
+          </p>
         </div>
       </div>
 
-      <div className="border-t border-border">
-        <div className="mx-auto max-w-6xl px-4 py-4 text-xs text-muted-foreground">
-          © {new Date().getFullYear()} {restaurant.name}. All rights reserved.
+      <div className="border-t border-border/70">
+        <div className="mx-auto flex max-w-7xl flex-col gap-1 px-4 py-4 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between sm:px-6">
+          <p>
+            © {new Date().getFullYear()} {restaurant.name}. {t("rights")}
+          </p>
+
+          <LocaleSwitcher />
         </div>
       </div>
     </footer>

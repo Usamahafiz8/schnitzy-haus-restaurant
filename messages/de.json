@@ -54,8 +54,8 @@
     "minutes": "Min."
   },
   "nav": {
-    "home": "Start",
-    "menu": "Speisekarte",
+    "home": "Home",
+    "menu": "Menu",
     "cart": "Warenkorb",
     "orders": "Bestellungen",
     "bookings": "Reservierungen",
@@ -67,29 +67,53 @@
     "signOut": "Abmelden",
     "signUp": "Registrieren",
     "admin": "Dashboard",
-    "notifications": "Benachrichtigungen"
+    "notifications": "Benachrichtigungen",
+    "about": "About Us",
+    "contact": "Contact",
+    "locations": "Locations",
+    "orderNow": "Order Now",
+    "search": "Suchen",
+    "searchPlaceholder": "Burger, Bowls, Beilagen…"
   },
   "home": {
-    "heroTitle": "Schnitzel, richtig gemacht.",
-    "heroSubtitle": "Täglich frisch paniert, auf Bestellung gebraten, mit allem serviert, was dazugehört.",
+    "heroKicker": "Frankfurt's Home of",
+    "heroLine1": "Premium",
+    "heroLine2": "Burgers",
+    "heroBody": "Handgemachte Burger, knusprige Schnitzel, frische Zutaten und unverwechselbarer Geschmack. Einmal probiert, nie wieder vergessen.",
+    "heroImageAlt": "Premium Burger mit Pommes und Getränk",
     "orderNow": "Jetzt bestellen",
-    "bookTable": "Tisch reservieren",
-    "featured": "Empfehlungen des Küchenchefs",
-    "featuredSubtitle": "Die Gerichte, für die man wiederkommt",
-    "categoriesTitle": "Speisekarte entdecken",
-    "howItWorks": "So funktioniert's",
-    "step1": "Gericht auswählen",
-    "step1Body": "Stöbern Sie durch die Karte, filtern Sie nach Ihren Vorlieben und stellen Sie Ihre Bestellung zusammen.",
-    "step2": "Sicher bezahlen",
-    "step2Body": "Zahlen Sie per Karte oder bei Abholung. Gutschein einlösen oder Punkte einsetzen.",
-    "step3": "Live verfolgen",
-    "step3Body": "Verfolgen Sie Ihre Bestellung von der Küche bis zur Tür – mit Updates in Echtzeit.",
-    "reviewsTitle": "Das sagen unsere Gäste",
-    "visitUs": "Besuchen Sie uns",
-    "openingHours": "Öffnungszeiten",
-    "getDirections": "Route planen",
-    "callUs": "Anrufen",
-    "whatsappUs": "WhatsApp schreiben"
+    "ourVideo": "Unser Video",
+    "features": {
+      "quality": {
+        "title": "Premium Quality",
+        "body": "Nur die besten Zutaten für besten Geschmack."
+      },
+      "fresh": {
+        "title": "Made Fresh",
+        "body": "Frisch zubereitet, jedes Mal."
+      },
+      "delivery": {
+        "title": "Schnelle Lieferung",
+        "body": "Heiß, frisch und schnell bei dir."
+      },
+      "rated": {
+        "title": "Top Bewertet",
+        "body": "Über 5000+ zufriedene Kunden."
+      }
+    },
+    "highlightsEyebrow": "Unsere Highlights",
+    "highlightsTitle": "Beliebte Speisen",
+    "fullMenu": "Ganze Speisekarte",
+    "partnersEyebrow": "Wir liefern über",
+    "partnersTitle": "Deine Lieblings-Partner",
+    "orderVia": "Bestellen über",
+    "aboutEyebrow": "Über uns",
+    "aboutTitle": "Mehr als nur Burger",
+    "aboutBody": "Bei Schnitzy Haus geht es um Leidenschaft, Qualität und echten Geschmack. Wir legen Wert auf frische Zutaten, eigene Saucen und handgemachte Zubereitung.",
+    "aboutBody2": "Unser Ziel: Dich jedes Mal aufs Neue zu begeistern.",
+    "aboutImageAlt": "Der Gastraum im Schnitzy Haus",
+    "learnMore": "Mehr erfahren",
+    "notConfigured": "Kein Restaurant konfiguriert"
   },
   "menu": {
     "title": "Speisekarte",
@@ -494,5 +518,65 @@
     "unauthorized": "Bitte melden Sie sich an, um fortzufahren.",
     "forbidden": "Dafür fehlt Ihnen die Berechtigung.",
     "goHome": "Zurück zur Startseite"
+  },
+  "footer": {
+    "quickLinks": "Schnellzugriff",
+    "information": "Informationen",
+    "contact": "Kontakt",
+    "openingHours": "Öffnungszeiten",
+    "daysRange": "Montag – Sonntag",
+    "hoursRange": "11:00 – 23:00 Uhr",
+    "signOff": "Wir freuen uns auf deine Bestellung!",
+    "rights": "Alle Rechte vorbehalten.",
+    "followUs": "Folge uns",
+    "imprint": "Impressum",
+    "privacy": "Datenschutz",
+    "terms": "AGB",
+    "withdrawal": "Widerrufsrecht",
+    "shipping": "Lieferung & Zahlung"
+  },
+  "about": {
+    "storyTitle": "Unsere Geschichte",
+    "storyBody1": "Angefangen hat alles mit einer simplen Frage: Warum schmeckt ein Burger selten so gut, wie er aussieht? Also haben wir angefangen, alles selbst zu machen — die Saucen, die Panade, die Buns von einem Bäcker um die Ecke.",
+    "storyBody2": "Heute stehen wir jeden Morgen in Frankfurt in der Küche, panieren von Hand und braten erst, wenn du bestellst. Das dauert ein paar Minuten länger. Es lohnt sich.",
+    "valuesTitle": "Wofür wir stehen",
+    "values": {
+      "quality": {
+        "title": "Beste Zutaten",
+        "body": "Fleisch vom Metzger unseres Vertrauens, Gemüse vom Großmarkt, nichts von der Stange."
+      },
+      "handmade": {
+        "title": "Handgemacht",
+        "body": "Panade, Saucen und Dressings entstehen bei uns in der Küche – jeden Tag neu."
+      },
+      "fresh": {
+        "title": "Frisch zubereitet",
+        "body": "Wir braten auf Bestellung. Nichts steht vor, nichts wartet unter der Wärmelampe."
+      },
+      "flavour": {
+        "title": "Echter Geschmack",
+        "body": "Kräftig gewürzt, ehrlich zusammengestellt. Kein Gericht verlässt die Küche halbherzig."
+      }
+    },
+    "videoTitle": "Ein Blick in unsere Küche",
+    "videoBody": "Wie aus ein paar Zutaten in wenigen Minuten dein Teller wird.",
+    "videoPlaceholder": "Video folgt in Kürze.",
+    "ctaTitle": "Hungrig geworden?",
+    "ctaBody": "Bestell in wenigen Klicks zur Abholung oder Lieferung nach Hause."
+  },
+  "contact": {
+    "lede": "Fragen zur Bestellung, zu Allergenen oder zu einer größeren Feier? Melde dich – wir antworten schnell.",
+    "formTitle": "Schreib uns",
+    "formBody": "Wir melden uns in der Regel innerhalb eines Werktags.",
+    "openNow": "Jetzt geöffnet",
+    "closedNow": "Gerade geschlossen"
+  },
+  "locations": {
+    "lede": "Komm vorbei, hol ab oder lass liefern. So findest du uns.",
+    "mapOf": "Karte von",
+    "mapUnavailable": "Karte nicht verfügbar – Google-Maps-Schlüssel fehlt.",
+    "none": "Derzeit ist kein Standort hinterlegt.",
+    "comingSoonTitle": "Bald an weiteren Standorten",
+    "comingSoonBody": "Wir wachsen. Du hast eine Fläche oder eine Idee für den nächsten Standort? Sprich uns an."
   }
 }

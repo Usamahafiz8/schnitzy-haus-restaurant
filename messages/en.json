@@ -67,29 +67,53 @@
     "signOut": "Sign out",
     "signUp": "Sign up",
     "admin": "Dashboard",
-    "notifications": "Notifications"
+    "notifications": "Notifications",
+    "about": "About Us",
+    "contact": "Contact",
+    "locations": "Locations",
+    "orderNow": "Order Now",
+    "search": "Search",
+    "searchPlaceholder": "Burgers, bowls, sides…"
   },
   "home": {
-    "heroTitle": "Schnitzel, done properly.",
-    "heroSubtitle": "Hand-breaded daily, fried to order, served with everything it deserves.",
+    "heroKicker": "Frankfurt's Home of",
+    "heroLine1": "Premium",
+    "heroLine2": "Burgers",
+    "heroBody": "Hand-made burgers, crisp schnitzel, fresh ingredients and a taste you won't forget. One bite is all it takes.",
+    "heroImageAlt": "Premium burger with fries and a drink",
     "orderNow": "Order now",
-    "bookTable": "Book a table",
-    "featured": "Chef's favourites",
-    "featuredSubtitle": "The plates people come back for",
-    "categoriesTitle": "Browse the menu",
-    "howItWorks": "How it works",
-    "step1": "Pick your plate",
-    "step1Body": "Browse the full menu, filter by what you can eat, and build your order.",
-    "step2": "Checkout securely",
-    "step2Body": "Pay by card or on collection. Apply a coupon or spend your points.",
-    "step3": "Track it live",
-    "step3Body": "Watch your order move from kitchen to door, with updates as it goes.",
-    "reviewsTitle": "What guests say",
-    "visitUs": "Visit us",
-    "openingHours": "Opening hours",
-    "getDirections": "Get directions",
-    "callUs": "Call us",
-    "whatsappUs": "WhatsApp us"
+    "ourVideo": "Our video",
+    "features": {
+      "quality": {
+        "title": "Premium Quality",
+        "body": "Only the best ingredients, for the best taste."
+      },
+      "fresh": {
+        "title": "Made Fresh",
+        "body": "Freshly prepared, every single time."
+      },
+      "delivery": {
+        "title": "Fast Delivery",
+        "body": "Hot, fresh and quick to your door."
+      },
+      "rated": {
+        "title": "Top Rated",
+        "body": "Over 5,000 happy customers."
+      }
+    },
+    "highlightsEyebrow": "Our highlights",
+    "highlightsTitle": "Popular dishes",
+    "fullMenu": "Full menu",
+    "partnersEyebrow": "We deliver with",
+    "partnersTitle": "Your favourite partners",
+    "orderVia": "Order via",
+    "aboutEyebrow": "About us",
+    "aboutTitle": "More than just burgers",
+    "aboutBody": "Schnitzy Haus is about passion, quality and real flavour. We care about fresh ingredients, our own sauces and preparing everything by hand.",
+    "aboutBody2": "Our goal: to win you over all over again, every time.",
+    "aboutImageAlt": "The Schnitzy Haus dining room",
+    "learnMore": "Learn more",
+    "notConfigured": "No restaurant configured"
   },
   "menu": {
     "title": "Menu",
@@ -494,5 +518,65 @@
     "unauthorized": "Please sign in to continue.",
     "forbidden": "You don't have access to that.",
     "goHome": "Back to home"
+  },
+  "footer": {
+    "quickLinks": "Quick links",
+    "information": "Information",
+    "contact": "Contact",
+    "openingHours": "Opening hours",
+    "daysRange": "Monday – Sunday",
+    "hoursRange": "11:00 – 23:00",
+    "signOff": "We can't wait for your order!",
+    "rights": "All rights reserved.",
+    "followUs": "Follow us",
+    "imprint": "Imprint",
+    "privacy": "Privacy",
+    "terms": "Terms",
+    "withdrawal": "Right of withdrawal",
+    "shipping": "Delivery & payment"
+  },
+  "about": {
+    "storyTitle": "Our story",
+    "storyBody1": "It started with a simple question: why does a burger so rarely taste as good as it looks? So we began making everything ourselves — the sauces, the breading, the buns from a baker round the corner.",
+    "storyBody2": "Today we're in the kitchen every morning in Frankfurt, breading by hand and only frying once you order. It takes a few minutes longer. It's worth it.",
+    "valuesTitle": "What we stand for",
+    "values": {
+      "quality": {
+        "title": "Best ingredients",
+        "body": "Meat from a butcher we trust, vegetables from the market, nothing off the shelf."
+      },
+      "handmade": {
+        "title": "Hand-made",
+        "body": "Breading, sauces and dressings are made in our kitchen — fresh every day."
+      },
+      "fresh": {
+        "title": "Made to order",
+        "body": "We fry when you order. Nothing sits waiting under a heat lamp."
+      },
+      "flavour": {
+        "title": "Real flavour",
+        "body": "Properly seasoned, honestly built. No plate leaves the kitchen half-hearted."
+      }
+    },
+    "videoTitle": "A look inside our kitchen",
+    "videoBody": "How a handful of ingredients becomes your plate in a few minutes.",
+    "videoPlaceholder": "Video coming soon.",
+    "ctaTitle": "Hungry yet?",
+    "ctaBody": "Order in a few clicks for collection or delivery."
+  },
+  "contact": {
+    "lede": "Questions about an order, allergens, or a larger party? Get in touch — we reply quickly.",
+    "formTitle": "Write to us",
+    "formBody": "We usually reply within one working day.",
+    "openNow": "Open now",
+    "closedNow": "Currently closed"
+  },
+  "locations": {
+    "lede": "Come by, collect, or have it delivered. Here's where to find us.",
+    "mapOf": "Map of",
+    "mapUnavailable": "Map unavailable — Google Maps key not set.",
+    "none": "No location has been configured yet.",
+    "comingSoonTitle": "More locations soon",
+    "comingSoonBody": "We're growing. Got a site or an idea for the next one? Talk to us."
   }
 }

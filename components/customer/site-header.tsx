@@ -1,110 +1,125 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
 import { useTranslations } from "next-intl";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
-  Bell,
-  ChefHat,
   LayoutDashboard,
   LogOut,
-  MapPin,
   Menu as MenuIcon,
+  Search,
   ShoppingBag,
   User,
   X,
 } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
+import { Logo } from "@/components/shared/logo";
 import { LocaleSwitcher } from "@/components/shared/locale-switcher";
+import { Button } from "@/components/ui/button";
 import { useCart } from "@/lib/store/cart";
 import { cn, initials } from "@/lib/utils";
 import { STAFF_ROLES } from "@/types";
 import type { Role } from "@prisma/client";
 
-export function SiteHeader({ isOpenNow }: { isOpenNow: boolean }) {
+const NAV = [
+  { href: "/", key: "home", exact: true },
+  { href: "/menu", key: "menu" },
+  { href: "/about", key: "about" },
+  { href: "/contact", key: "contact" },
+  { href: "/locations", key: "locations" },
+] as const;
+
+export function SiteHeader() {
   const t = useTranslations("nav");
-  const tCommon = useTranslations("common");
   const pathname = usePathname();
+  const router = useRouter();
   const { data: session } = useSession();
+
   const [open, setOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [query, setQuery] = useState("");
+  const searchRef = useRef<HTMLInputElement>(null);
 
   const count = useCart((s) => s.count());
   const hydrated = useCart((s) => s.hydrated);
 
-  // Route change closes the drawer; without this it survives navigation.
-  useEffect(() => setOpen(false), [pathname]);
+  // Route change closes both overlays; without this they survive navigation.
+  useEffect(() => {
+    setOpen(false);
+    setSearchOpen(false);
+  }, [pathname]);
+
+  useEffect(() => {
+    if (searchOpen) searchRef.current?.focus();
+  }, [searchOpen]);
 
   const isStaff = session?.user && STAFF_ROLES.includes(session.user.role as Role);
 
-  const links = [
-    { href: "/menu", label: t("menu") },
-    { href: "/bookings", label: t("bookings") },
-    { href: "/loyalty", label: t("loyalty") },
-    { href: "/location", label: t("location") },
-  ];
+  const submitSearch = (event: React.FormEvent) => {
+    event.preventDefault();
+    const q = query.trim();
+    router.push(q ? `/menu?q=${encodeURIComponent(q)}` : "/menu");
+  };
+
+  const isActive = (href: string, exact?: boolean) =>
+    exact ? pathname === href : pathname.startsWith(href);
 
   return (
-    <header className="sticky top-0 z-40 border-b border-border bg-background/85 backdrop-blur-md">
-      <div className="mx-auto flex h-16 max-w-6xl items-center gap-3 px-4">
-        <Link href="/" className="flex items-center gap-2 font-semibold tracking-tight">
-          <ChefHat className="size-6 text-primary" aria-hidden />
-          <span className="text-base sm:text-lg">Schnitzy Haus</span>
+    <header className="sticky top-0 z-40 border-b border-border/70 bg-background/90 backdrop-blur-md">
+      <div className="mx-auto flex h-20 max-w-7xl items-center gap-4 px-4 sm:px-6">
+        <Link href="/" aria-label="Schnitzy Haus — home" className="shrink-0">
+          <Logo className="hidden sm:inline-flex" />
+          <Logo compact className="sm:hidden" />
         </Link>
 
-        <span
-          className={cn(
-            "hidden items-center gap-1.5 rounded-full px-2 py-0.5 text-xs font-medium sm:inline-flex",
-            isOpenNow
-              ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300"
-              : "bg-muted text-muted-foreground",
-          )}
-        >
-          <span
-            className={cn(
-              "size-1.5 rounded-full",
-              isOpenNow ? "bg-emerald-600" : "bg-muted-foreground",
-            )}
-            aria-hidden
-          />
-          {isOpenNow ? tCommon("openNow") : tCommon("closed")}
-        </span>
-
-        <nav className="ml-auto hidden items-center gap-1 md:flex">
-          {links.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className={cn(
-                "rounded-lg px-3 py-2 text-sm font-medium transition-colors",
-                pathname.startsWith(link.href)
-                  ? "bg-muted text-foreground"
-                  : "text-muted-foreground hover:text-foreground",
-              )}
-            >
-              {link.label}
-            </Link>
-          ))}
+        {/* --------------------------------------------------------------- nav */}
+        <nav className="ml-auto hidden items-center gap-7 lg:flex" aria-label="Main">
+          {NAV.map((item) => {
+            const active = isActive(item.href, "exact" in item && item.exact);
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                aria-current={active ? "page" : undefined}
+                className={cn(
+                  "relative py-1 text-[13px] font-bold uppercase tracking-wider transition-colors",
+                  active
+                    ? "text-primary"
+                    : "text-foreground/80 hover:text-primary",
+                )}
+              >
+                {t(item.key)}
+                {active && (
+                  <span className="absolute -bottom-0.5 left-0 h-0.5 w-full rounded-full bg-primary" />
+                )}
+              </Link>
+            );
+          })}
         </nav>
 
-        <div className="ml-auto flex items-center gap-1 md:ml-0">
-          <LocaleSwitcher className="hidden sm:inline-flex" />
-
-          {session?.user && (
-            <Button variant="ghost" size="icon" asChild aria-label={t("notifications")}>
-              <Link href="/profile#notifications">
-                <Bell />
-              </Link>
-            </Button>
-          )}
+        {/* ------------------------------------------------------------ actions */}
+        <div className="ml-auto flex items-center gap-1 lg:ml-0 lg:gap-2">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setSearchOpen((v) => !v)}
+            aria-label={t("search")}
+            aria-expanded={searchOpen}
+            className="hidden sm:inline-flex"
+          >
+            <Search />
+          </Button>
 
           <Button variant="ghost" size="icon" asChild className="relative">
-            <Link href="/cart" aria-label={`${t("cart")}${hydrated && count ? `, ${count}` : ""}`}>
+            <Link
+              href="/cart"
+              aria-label={`${t("cart")}${hydrated && count ? `, ${count}` : ""}`}
+            >
               <ShoppingBag />
               {hydrated && count > 0 && (
-                <span className="absolute -right-0.5 -top-0.5 flex size-5 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground">
+                <span className="absolute right-0.5 top-1 flex size-4.5 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground">
                   {count > 9 ? "9+" : count}
                 </span>
               )}
@@ -112,7 +127,7 @@ export function SiteHeader({ isOpenNow }: { isOpenNow: boolean }) {
           </Button>
 
           {session?.user ? (
-            <div className="hidden items-center gap-1 md:flex">
+            <div className="hidden items-center gap-1 lg:flex">
               {isStaff && (
                 <Button variant="ghost" size="icon" asChild aria-label={t("admin")}>
                   <Link href="/admin/dashboard">
@@ -122,24 +137,31 @@ export function SiteHeader({ isOpenNow }: { isOpenNow: boolean }) {
               )}
               <Button variant="ghost" size="icon" asChild aria-label={t("profile")}>
                 <Link href="/profile">
-                  <span className="flex size-7 items-center justify-center rounded-full bg-primary text-xs font-semibold text-primary-foreground">
+                  <span className="flex size-7 items-center justify-center rounded-full bg-primary text-[11px] font-bold text-primary-foreground">
                     {initials(session.user.firstName, session.user.lastName)}
                   </span>
                 </Link>
               </Button>
             </div>
           ) : (
-            <Button size="sm" asChild className="hidden md:inline-flex">
-              <Link href="/auth/login">{t("signIn")}</Link>
+            <Button variant="ghost" size="icon" asChild className="hidden lg:inline-flex" aria-label={t("signIn")}>
+              <Link href="/auth/login">
+                <User />
+              </Link>
             </Button>
           )}
+
+          {/* Never hidden: this is the button the whole page exists to get pressed. */}
+          <Button asChild size="sm" className="shrink-0 uppercase sm:h-11 sm:px-4 sm:text-sm">
+            <Link href="/menu">{t("orderNow")}</Link>
+          </Button>
 
           <Button
             variant="ghost"
             size="icon"
-            className="md:hidden"
+            className="lg:hidden"
             onClick={() => setOpen((v) => !v)}
-            aria-label="Menu"
+            aria-label={t("menu")}
             aria-expanded={open}
           >
             {open ? <X /> : <MenuIcon />}
@@ -147,16 +169,46 @@ export function SiteHeader({ isOpenNow }: { isOpenNow: boolean }) {
         </div>
       </div>
 
+      {/* ------------------------------------------------------------- search */}
+      {searchOpen && (
+        <div className="animate-in border-t border-border bg-background">
+          <form
+            onSubmit={submitSearch}
+            className="mx-auto flex max-w-7xl items-center gap-2 px-4 py-3 sm:px-6"
+          >
+            <Search className="size-4 shrink-0 text-muted-foreground" aria-hidden />
+            <input
+              ref={searchRef}
+              type="search"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder={t("searchPlaceholder")}
+              aria-label={t("searchPlaceholder")}
+              className="flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground"
+            />
+            <Button type="submit" size="sm">
+              {t("search")}
+            </Button>
+          </form>
+        </div>
+      )}
+
+      {/* ------------------------------------------------------------- drawer */}
       {open && (
-        <div className="animate-in border-t border-border bg-background md:hidden">
-          <nav className="mx-auto flex max-w-6xl flex-col p-3">
-            {links.map((link) => (
+        <div className="animate-in border-t border-border bg-background lg:hidden">
+          <nav className="mx-auto flex max-w-7xl flex-col p-3 sm:px-6">
+            {NAV.map((item) => (
               <Link
-                key={link.href}
-                href={link.href}
-                className="rounded-lg px-3 py-3 text-sm font-medium hover:bg-muted"
+                key={item.href}
+                href={item.href}
+                className={cn(
+                  "rounded-lg px-3 py-3 text-sm font-bold uppercase tracking-wider",
+                  isActive(item.href, "exact" in item && item.exact)
+                    ? "bg-brand-50 text-primary"
+                    : "hover:bg-muted",
+                )}
               >
-                {link.label}
+                {t(item.key)}
               </Link>
             ))}
 
@@ -195,18 +247,15 @@ export function SiteHeader({ isOpenNow }: { isOpenNow: boolean }) {
             ) : (
               <div className="flex flex-col gap-2 px-1 py-2">
                 <Button asChild block>
-                  <Link href="/auth/login">{t("signIn")}</Link>
+                  <Link href="/menu">{t("orderNow")}</Link>
                 </Button>
                 <Button asChild variant="outline" block>
-                  <Link href="/auth/signup">{t("signUp")}</Link>
+                  <Link href="/auth/login">{t("signIn")}</Link>
                 </Button>
               </div>
             )}
 
-            <div className="flex items-center justify-between px-3 pt-3">
-              <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                <MapPin className="size-3.5" /> Kastanienallee 47, Berlin
-              </span>
+            <div className="px-3 pt-3">
               <LocaleSwitcher />
             </div>
           </nav>

@@ -28,8 +28,10 @@ playwright/.cache/
 # uploads written by the local storage fallback
 public/uploads/
 
-# local tooling
+# local editor/tooling state
 .claude/
+.cursor/
+.aider*
 
 # misc
 .DS_Store
