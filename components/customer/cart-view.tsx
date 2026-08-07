@@ -362,7 +362,7 @@ function Row({
   return (
     <div className="flex justify-between">
       <span className="text-muted-foreground">{label}</span>
-      <span className={cn(accent && "font-medium text-emerald-700 dark:text-emerald-400")}>
+      <span className={cn(accent && "font-medium text-emerald-700 ")}>
         {value}
       </span>
     </div>

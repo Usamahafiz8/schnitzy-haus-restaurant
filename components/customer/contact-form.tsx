@@ -52,7 +52,7 @@ export function ContactForm() {
 
   if (sent) {
     return (
-      <div className="flex items-center gap-3 rounded-lg bg-emerald-50 p-4 dark:bg-emerald-950/40">
+      <div className="flex items-center gap-3 rounded-lg bg-emerald-50 p-4">
         <CheckCircle2 className="size-5 shrink-0 text-emerald-600" aria-hidden />
         <p className="text-sm">{t("sent")}</p>
       </div>

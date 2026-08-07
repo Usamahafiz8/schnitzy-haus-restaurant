@@ -106,7 +106,7 @@ export default async function ContactPage() {
               <p
                 className={
                   isOpen
-                    ? "mt-2 text-sm font-semibold text-emerald-700 dark:text-emerald-400"
+                    ? "mt-2 text-sm font-semibold text-emerald-700 "
                     : "mt-2 text-sm text-muted-foreground"
                 }
               >

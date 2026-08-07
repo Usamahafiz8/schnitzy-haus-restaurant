@@ -40,9 +40,9 @@ type Table = {
 };
 
 const STATUS_STYLE: Record<TableStatus, string> = {
-  FREE: "border-emerald-500/50 bg-emerald-50 dark:bg-emerald-950/30",
-  OCCUPIED: "border-red-500/50 bg-red-50 dark:bg-red-950/30",
-  RESERVED: "border-amber-500/50 bg-amber-50 dark:bg-amber-950/30",
+  FREE: "border-emerald-500/50 bg-emerald-50 ",
+  OCCUPIED: "border-red-500/50 bg-red-50 ",
+  RESERVED: "border-amber-500/50 bg-amber-50 ",
   OUT_OF_SERVICE: "border-border bg-muted opacity-60",
 };
 

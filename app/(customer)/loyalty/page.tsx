@@ -62,7 +62,7 @@ export default async function LoyaltyPage() {
       </header>
 
       {/* --------------------------------------------------------- balance card */}
-      <Card className="overflow-hidden border-primary/30 bg-gradient-to-br from-brand-50 to-card dark:from-brand-900/30">
+      <Card className="overflow-hidden border-primary/30 bg-gradient-to-br from-brand-50 to-card">
         <CardContent className="p-6">
           <div className="flex items-start justify-between gap-4">
             <div>
@@ -257,7 +257,7 @@ export default async function LoyaltyPage() {
                   <span
                     className={
                       entry.points >= 0
-                        ? "shrink-0 font-medium tabular-nums text-emerald-700 dark:text-emerald-400"
+                        ? "shrink-0 font-medium tabular-nums text-emerald-700 "
                         : "shrink-0 font-medium tabular-nums text-muted-foreground"
                     }
                   >

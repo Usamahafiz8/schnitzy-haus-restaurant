@@ -8,12 +8,12 @@ import { cn } from "@/lib/utils";
  * still reads as designed rather than showing broken-image icons.
  */
 const GRADIENTS = [
-  "from-amber-200 to-orange-300 dark:from-amber-900 dark:to-orange-950",
-  "from-orange-200 to-red-200 dark:from-orange-950 dark:to-red-950",
-  "from-yellow-200 to-amber-300 dark:from-yellow-900 dark:to-amber-950",
-  "from-lime-200 to-emerald-200 dark:from-lime-950 dark:to-emerald-950",
-  "from-rose-200 to-amber-200 dark:from-rose-950 dark:to-amber-950",
-  "from-stone-200 to-amber-200 dark:from-stone-800 dark:to-amber-950",
+  "from-amber-200 to-orange-300",
+  "from-orange-200 to-red-200",
+  "from-yellow-200 to-amber-300",
+  "from-lime-200 to-emerald-200",
+  "from-rose-200 to-amber-200",
+  "from-stone-200 to-amber-200",
 ];
 
 function hash(text: string) {
@@ -65,7 +65,7 @@ export function DishImage({
       role="img"
       aria-label={alt}
     >
-      <span className="select-none text-3xl font-semibold text-black/25 dark:text-white/25">
+      <span className="select-none text-3xl font-semibold text-black/25">
         {initial}
       </span>
     </div>

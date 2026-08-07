@@ -53,7 +53,7 @@ export function CouponList({
       {coupons.map((coupon) => (
         <li
           key={coupon.id}
-          className="flex items-center justify-between gap-3 rounded-lg border border-dashed border-primary/40 bg-brand-50/50 p-3 dark:bg-brand-900/10"
+          className="flex items-center justify-between gap-3 rounded-lg border border-dashed border-primary/40 bg-brand-50/50 p-3"
         >
           <div className="flex min-w-0 items-center gap-3">
             <Tag className="size-4 shrink-0 text-primary" aria-hidden />

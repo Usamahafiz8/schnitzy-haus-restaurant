@@ -169,7 +169,7 @@ export function MenuManager({
         </div>
 
         {selected.size > 0 && (
-          <div className="animate-in flex flex-wrap items-center gap-2 rounded-lg border border-primary/40 bg-brand-50/60 p-3 dark:bg-brand-900/20">
+          <div className="animate-in flex flex-wrap items-center gap-2 rounded-lg border border-primary/40 bg-brand-50/60 p-3">
             <span className="text-sm font-medium">
               {t("selected", { count: selected.size })}
             </span>

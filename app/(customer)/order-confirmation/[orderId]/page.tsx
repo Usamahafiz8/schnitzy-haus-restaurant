@@ -48,8 +48,8 @@ export default async function OrderConfirmationPage({
   return (
     <div className="mx-auto max-w-2xl px-4 py-10">
       <div className="text-center">
-        <div className="mx-auto flex size-14 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-950">
-          <CheckCircle2 className="size-7 text-emerald-600 dark:text-emerald-400" aria-hidden />
+        <div className="mx-auto flex size-14 items-center justify-center rounded-full bg-emerald-100">
+          <CheckCircle2 className="size-7 text-emerald-600" aria-hidden />
         </div>
         <h1 className="mt-4 text-2xl font-bold">{t("confirmation")}</h1>
         <p className="mt-2 text-muted-foreground">

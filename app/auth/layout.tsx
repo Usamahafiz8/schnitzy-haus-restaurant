@@ -5,7 +5,7 @@ import { LocaleSwitcher } from "@/components/shared/locale-switcher";
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex min-h-dvh flex-col bg-gradient-to-b from-brand-50 to-background dark:from-brand-900/20">
+    <div className="flex min-h-dvh flex-col bg-gradient-to-b from-brand-50 to-background">
       <header className="flex items-center justify-between p-4">
         <Link href="/" className="flex items-center gap-2 font-semibold">
           <ChefHat className="size-6 text-primary" aria-hidden />

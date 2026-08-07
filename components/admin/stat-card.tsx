@@ -22,7 +22,7 @@ export function StatCard({
   const up = (changePct ?? 0) >= 0;
 
   return (
-    <Card className={cn(accent && "border-primary/40 bg-brand-50/50 dark:bg-brand-900/10")}>
+    <Card className={cn(accent && "border-primary/40 bg-brand-50/50 ")}>
       <CardContent className="p-4">
         <div className="flex items-start justify-between gap-2">
           <p className="text-sm text-muted-foreground">{label}</p>
@@ -37,7 +37,7 @@ export function StatCard({
               className={cn(
                 "flex items-center gap-0.5 font-medium",
                 up
-                  ? "text-emerald-700 dark:text-emerald-400"
+                  ? "text-emerald-700 "
                   : "text-destructive",
               )}
             >

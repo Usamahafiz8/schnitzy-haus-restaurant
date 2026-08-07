@@ -120,7 +120,7 @@ export function OrderTracker({
         <span
           className={cn(
             "flex items-center gap-1.5 text-xs",
-            live ? "text-emerald-700 dark:text-emerald-400" : "text-muted-foreground",
+            live ? "text-emerald-700 " : "text-muted-foreground",
           )}
         >
           <span

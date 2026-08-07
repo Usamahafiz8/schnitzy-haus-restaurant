@@ -34,7 +34,7 @@ export function ForgotPasswordForm() {
 
   if (sent) {
     return (
-      <div className="mt-6 flex items-start gap-3 rounded-lg bg-emerald-50 p-4 dark:bg-emerald-950/40">
+      <div className="mt-6 flex items-start gap-3 rounded-lg bg-emerald-50 p-4">
         <CheckCircle2 className="mt-0.5 size-5 shrink-0 text-emerald-600" aria-hidden />
         <p className="text-sm">{t("resetSent")}</p>
       </div>

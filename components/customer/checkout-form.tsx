@@ -297,7 +297,7 @@ export function CheckoutForm({
                     className={cn(
                       "flex w-full items-start gap-3 rounded-lg border p-3 text-left transition-colors",
                       addressId === address.id
-                        ? "border-primary bg-brand-50 dark:bg-brand-900/20"
+                        ? "border-primary bg-brand-50 "
                         : "border-border hover:bg-muted",
                     )}
                   >
@@ -426,7 +426,7 @@ export function CheckoutForm({
 
             <div className="flex items-center justify-between text-sm">
               <span>{t("pointsApplied", { points: pointsToRedeem })}</span>
-              <span className="font-medium text-emerald-700 dark:text-emerald-400">
+              <span className="font-medium text-emerald-700">
                 −{formatCurrency(totals.pointsDiscount, locale, config.currency)}
               </span>
             </div>
@@ -576,7 +576,7 @@ function PaymentOption({
       aria-pressed={selected}
       className={cn(
         "flex items-center gap-3 rounded-lg border p-4 text-left transition-colors",
-        selected ? "border-primary bg-brand-50 dark:bg-brand-900/20" : "border-border hover:bg-muted",
+        selected ? "border-primary bg-brand-50 " : "border-border hover:bg-muted",
         disabled && "cursor-not-allowed opacity-50",
       )}
     >

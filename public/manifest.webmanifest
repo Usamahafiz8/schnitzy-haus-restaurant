@@ -1,15 +1,19 @@
 {
-  "name": "Schnitzy Haus",
+  "name": "Schnitzy Haus — Premium Burgers & Bowls",
   "short_name": "Schnitzy",
-  "description": "Order schnitzel for pickup or delivery, book a table, and earn points on every meal.",
+  "description": "Handgemachte Burger, knusprige Schnitzel und frische Bowls. Online bestellen zur Abholung oder Lieferung in Frankfurt.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#fffdf9",
-  "theme_color": "#b45309",
-  "categories": ["food", "shopping", "lifestyle"],
-  "lang": "en",
+  "background_color": "#fdf7f0",
+  "theme_color": "#c4152b",
+  "categories": [
+    "food",
+    "shopping",
+    "lifestyle"
+  ],
+  "lang": "de",
   "dir": "ltr",
   "icons": [
     {
@@ -33,22 +37,22 @@
   ],
   "shortcuts": [
     {
-      "name": "Order now",
-      "short_name": "Menu",
+      "name": "Jetzt bestellen",
+      "short_name": "Speisekarte",
       "url": "/menu",
-      "description": "Browse the full menu"
+      "description": "Die ganze Speisekarte ansehen"
     },
     {
-      "name": "Book a table",
-      "short_name": "Bookings",
+      "name": "Tisch reservieren",
+      "short_name": "Reservierung",
       "url": "/bookings",
-      "description": "Reserve a table"
+      "description": "Einen Tisch reservieren"
     },
     {
-      "name": "Your orders",
-      "short_name": "Orders",
+      "name": "Meine Bestellungen",
+      "short_name": "Bestellungen",
       "url": "/orders",
-      "description": "Track your orders"
+      "description": "Bestellungen verfolgen"
     }
   ]
 }

@@ -187,7 +187,7 @@ export function OrdersBoard({
                         <span className="font-medium tabular-nums">{item.quantity}×</span>{" "}
                         {item.name}
                         {item.specialNotes && (
-                          <span className="block pl-5 text-xs italic text-amber-700 dark:text-amber-400">
+                          <span className="block pl-5 text-xs italic text-amber-700">
                             {item.specialNotes}
                           </span>
                         )}
@@ -196,7 +196,7 @@ export function OrdersBoard({
                   </ul>
 
                   {order.specialNotes && (
-                    <p className="rounded-md bg-amber-50 px-2 py-1.5 text-xs text-amber-900 dark:bg-amber-950/40 dark:text-amber-200">
+                    <p className="rounded-md bg-amber-50 px-2 py-1.5 text-xs text-amber-900">
                       {order.specialNotes}
                     </p>
                   )}

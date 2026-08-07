@@ -14,12 +14,12 @@ export default function LegalLayout({
 }) {
   return (
     <div className="mx-auto max-w-3xl px-4 py-12 sm:px-6">
-      <div className="mb-8 flex gap-3 rounded-xl border border-amber-300 bg-amber-50 p-4 text-sm dark:border-amber-800 dark:bg-amber-950/40">
+      <div className="mb-8 flex gap-3 rounded-xl border border-amber-300 bg-amber-50 p-4 text-sm">
         <AlertTriangle
-          className="mt-0.5 size-5 shrink-0 text-amber-600 dark:text-amber-400"
+          className="mt-0.5 size-5 shrink-0 text-amber-600"
           aria-hidden
         />
-        <p className="text-amber-900 dark:text-amber-200">
+        <p className="text-amber-900">
           <strong>Vorlage — vor dem Livegang ersetzen.</strong> Diese Seite ist
           ein Gerüst mit Platzhaltern. Rechtstexte müssen von der Betreiberin
           bzw. dem Betreiber (idealerweise anwaltlich geprüft) eingesetzt werden.

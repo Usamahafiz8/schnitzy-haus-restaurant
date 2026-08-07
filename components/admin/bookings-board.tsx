@@ -156,7 +156,7 @@ export function BookingsBoard({
                   )}
 
                   {booking.specialRequests && (
-                    <p className="rounded-md bg-amber-50 px-2 py-1.5 text-xs text-amber-900 dark:bg-amber-950/40 dark:text-amber-200">
+                    <p className="rounded-md bg-amber-50 px-2 py-1.5 text-xs text-amber-900">
                       {booking.specialRequests}
                     </p>
                   )}
