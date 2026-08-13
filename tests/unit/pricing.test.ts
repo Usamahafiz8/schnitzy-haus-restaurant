@@ -1,21 +1,21 @@
-import { Prisma, type Coupon, type MenuItem, type Restaurant } from "@prisma/client";
+import { Prisma, type Coupon, type Restaurant } from "@prisma/client";
 
 import { couponDiscountFor, effectivePrice, priceOrder, PricingError } from "@/lib/pricing";
+import type { MenuItemData } from "@/lib/menu-data";
 
 const decimal = (value: number) => new Prisma.Decimal(value);
 
-function makeItem(overrides: Partial<MenuItem> = {}): MenuItem {
+function makeItem(overrides: Partial<MenuItemData> = {}): MenuItemData {
   return {
     id: "item-1",
-    restaurantId: "r1",
     categoryId: "c1",
     name: "Wiener Schnitzel",
-    nameDe: null,
-    description: null,
-    descriptionDe: null,
-    price: decimal(20),
+    nameDe: "Wiener Schnitzel",
+    description: "",
+    descriptionDe: "",
+    price: 20,
     discountPrice: null,
-    image: null,
+    image: "/images/dishes/wiener-schnitzel.jpg",
     preparationTime: 20,
     displayOrder: 0,
     isAvailable: true,
@@ -26,10 +26,8 @@ function makeItem(overrides: Partial<MenuItem> = {}): MenuItem {
     isSpicy: false,
     calories: null,
     allergens: [],
-    createdAt: new Date(),
-    updatedAt: new Date(),
     ...overrides,
-  } as MenuItem;
+  };
 }
 
 const restaurant = {
@@ -73,15 +71,15 @@ function makeCoupon(overrides: Partial<Coupon> = {}): Coupon {
 
 describe("effectivePrice", () => {
   it("uses the discount when it beats the base price", () => {
-    expect(effectivePrice(makeItem({ discountPrice: decimal(15) }))).toBe(15);
+    expect(effectivePrice(makeItem({ discountPrice: 15 }))).toBe(15);
   });
 
   it("ignores a discount that isn't actually cheaper", () => {
-    expect(effectivePrice(makeItem({ discountPrice: decimal(25) }))).toBe(20);
+    expect(effectivePrice(makeItem({ discountPrice: 25 }))).toBe(20);
   });
 
   it("ignores a zero discount price", () => {
-    expect(effectivePrice(makeItem({ discountPrice: decimal(0) }))).toBe(20);
+    expect(effectivePrice(makeItem({ discountPrice: 0 }))).toBe(20);
   });
 });
 
@@ -162,7 +160,7 @@ describe("priceOrder", () => {
     expect(() =>
       priceOrder({
         lines: [{ itemId: "item-1", quantity: 1 }],
-        menuItems: [makeItem({ price: decimal(10) })],
+        menuItems: [makeItem({ price: 10 })],
         restaurant,
         orderType: "DELIVERY",
       }),
@@ -199,7 +197,7 @@ describe("priceOrder", () => {
   it("never lets points push the total below zero", () => {
     const result = priceOrder({
       lines: [{ itemId: "item-1", quantity: 1 }],
-      menuItems: [makeItem({ price: decimal(10) })],
+      menuItems: [makeItem({ price: 10 })],
       restaurant,
       orderType: "PICKUP",
       pointsToRedeem: 100_000,

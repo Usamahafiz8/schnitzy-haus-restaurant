@@ -5,6 +5,7 @@ import { getTranslations } from "next-intl/server";
 import { ProfileSettings } from "@/components/customer/profile-settings";
 import { currentUser } from "@/lib/api";
 import { prisma } from "@/lib/db";
+import { getMenuItem } from "@/lib/menu-data";
 import { serialize } from "@/lib/serialize";
 
 export const dynamic = "force-dynamic";
@@ -44,15 +45,23 @@ export default async function ProfilePage() {
     prisma.favorite.findMany({
       where: { userId: session.id },
       orderBy: { createdAt: "desc" },
-      include: {
-        menuItem: {
-          select: { id: true, name: true, nameDe: true, price: true, image: true },
-        },
-      },
     }),
   ]);
 
   if (!user) redirect("/auth/login");
+
+  // The menu lives in code now, not the database — resolve each favorite
+  // against it and drop any that point at a dish that's since been removed.
+  const favoritesWithItems = favorites.flatMap((f) => {
+    const item = getMenuItem(f.menuItemId);
+    if (!item) return [];
+    return [
+      {
+        id: f.id,
+        menuItem: { id: item.id, name: item.name, nameDe: item.nameDe, price: item.price, image: item.image },
+      },
+    ];
+  });
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-8">
@@ -61,10 +70,7 @@ export default async function ProfilePage() {
       <ProfileSettings
         user={serialize(user)}
         addresses={serialize(addresses)}
-        favorites={serialize(favorites).map((f) => ({
-          id: f.id,
-          menuItem: f.menuItem,
-        }))}
+        favorites={favoritesWithItems}
       />
     </div>
   );

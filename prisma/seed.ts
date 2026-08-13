@@ -8,6 +8,8 @@
 import { PrismaClient, type OrderStatus } from "@prisma/client";
 import bcrypt from "bcryptjs";
 
+import { MENU_ITEMS } from "../lib/menu-data";
+
 const prisma = new PrismaClient();
 
 const SLUG = "schnitzy-haus";
@@ -27,16 +29,6 @@ function randInt(min: number, max: number) {
 function round2(n: number) {
   return Math.round(n * 100) / 100;
 }
-/** Dish photos live at a predictable path so real ones can be dropped in later. */
-function imagePath(name: string) {
-  const slug = name
-    .toLowerCase()
-    .replace(/ä/g, "ae").replace(/ö/g, "oe").replace(/ü/g, "ue").replace(/ß/g, "ss")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "");
-  return `/images/dishes/${slug}.jpg`;
-}
-
 function dateKey(d: Date) {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 }
@@ -50,287 +42,6 @@ const OPENING_HOURS = {
   saturday: { open: "11:00", close: "23:00", closed: false },
   sunday: { open: "11:00", close: "23:00", closed: false },
 };
-
-type ItemSeed = {
-  name: string;
-  nameDe: string;
-  description: string;
-  descriptionDe: string;
-  price: number;
-  discountPrice?: number;
-  preparationTime: number;
-  allergens: string[];
-  isVegan?: boolean;
-  isVegetarian?: boolean;
-  isGlutenFree?: boolean;
-  isSpicy?: boolean;
-  isFeatured?: boolean;
-  calories?: number;
-};
-
-const MENU: { category: string; categoryDe: string; description: string; descriptionDe: string; items: ItemSeed[] }[] = [
-  {
-    category: "Burgers",
-    categoryDe: "Burger",
-    description: "Hand-made patties, buns from a local bakery, our own sauces",
-    descriptionDe: "Handgemachte Patties, Buns vom Bäcker um die Ecke, eigene Saucen",
-    items: [
-      {
-        name: "Schnitzel Burger",
-        nameDe: "Schnitzel Burger",
-        description: "Crispy chicken schnitzel, salad, house sauce.",
-        descriptionDe: "Knuspriges Hähnchenschnitzel, Salat, Haus-Sauce.",
-        price: 10.9,
-        preparationTime: 14,
-        allergens: ["gluten", "eggs", "milk", "mustard"],
-        isFeatured: true,
-        calories: 780,
-      },
-      {
-        name: "Beef Burger",
-        nameDe: "Beef Burger",
-        description: "Juicy beef, cheddar, salad, special sauce.",
-        descriptionDe: "Saftiges Rindfleisch, Cheddar, Salat, Spezial-Sauce.",
-        price: 11.9,
-        preparationTime: 14,
-        allergens: ["gluten", "milk", "eggs", "mustard"],
-        isFeatured: true,
-        calories: 860,
-      },
-      {
-        name: "Double Beef Burger",
-        nameDe: "Double Beef Burger",
-        description: "Two patties, double cheddar, crispy onions, burger sauce.",
-        descriptionDe: "Zwei Patties, doppelt Cheddar, Röstzwiebeln, Burger-Sauce.",
-        price: 14.9,
-        preparationTime: 16,
-        allergens: ["gluten", "milk", "eggs", "mustard"],
-        calories: 1180,
-      },
-      {
-        name: "Crispy Chicken Burger",
-        nameDe: "Crispy Chicken Burger",
-        description: "Buttermilk chicken, coleslaw, pickles, spicy mayo.",
-        descriptionDe: "Buttermilch-Hähnchen, Krautsalat, Gurken, scharfe Mayo.",
-        price: 11.5,
-        preparationTime: 15,
-        allergens: ["gluten", "milk", "eggs", "mustard"],
-        isSpicy: true,
-        calories: 820,
-      },
-      {
-        name: "Veggie Burger",
-        nameDe: "Veggie Burger",
-        description: "Crisp vegetable patty, herb aioli, tomato, rocket.",
-        descriptionDe: "Knuspriges Gemüse-Patty, Kräuter-Aioli, Tomate, Rucola.",
-        price: 10.5,
-        preparationTime: 13,
-        allergens: ["gluten", "soy", "mustard"],
-        isVegan: true,
-        isVegetarian: true,
-        calories: 640,
-      },
-    ],
-  },
-  {
-    category: "Bowls",
-    categoryDe: "Bowls",
-    description: "Everything from the burger, minus the bun",
-    descriptionDe: "Alles vom Burger, nur ohne Bun",
-    items: [
-      {
-        name: "Schnitzy Bowl",
-        nameDe: "Schnitzy Bowl",
-        description: "Crispy chicken, rice, salad, house sauce.",
-        descriptionDe: "Knuspriges Hähnchen, Reis, Salat, Haus-Sauce.",
-        price: 9.9,
-        preparationTime: 12,
-        allergens: ["gluten", "eggs", "milk"],
-        isFeatured: true,
-        calories: 690,
-      },
-      {
-        name: "Beef Bowl",
-        nameDe: "Beef Bowl",
-        description: "Beef strips, rice, grilled peppers, garlic sauce.",
-        descriptionDe: "Rindfleischstreifen, Reis, gegrillte Paprika, Knoblauch-Sauce.",
-        price: 11.5,
-        preparationTime: 14,
-        allergens: ["milk"],
-        isGlutenFree: true,
-        calories: 720,
-      },
-      {
-        name: "Veggie Bowl",
-        nameDe: "Veggie Bowl",
-        description: "Roasted vegetables, chickpeas, rice, herb dressing.",
-        descriptionDe: "Ofengemüse, Kichererbsen, Reis, Kräuterdressing.",
-        price: 9.5,
-        preparationTime: 11,
-        allergens: ["mustard"],
-        isVegan: true,
-        isVegetarian: true,
-        isGlutenFree: true,
-        calories: 540,
-      },
-    ],
-  },
-  {
-    category: "Sides",
-    categoryDe: "Beilagen",
-    description: "Everything that belongs alongside",
-    descriptionDe: "Alles, was dazugehört",
-    items: [
-      {
-        name: "Loaded Fries",
-        nameDe: "Loaded Fries",
-        description: "Fries, cheese sauce, minced beef, jalapeños.",
-        descriptionDe: "Pommes, Käse-Sauce, Rinderhack, Jalapeños.",
-        price: 6.9,
-        preparationTime: 10,
-        allergens: ["milk"],
-        isFeatured: true,
-        isSpicy: true,
-        calories: 720,
-      },
-      {
-        name: "Pommes Frites",
-        nameDe: "Pommes frites",
-        description: "Twice-fried, sea salt, house mayo.",
-        descriptionDe: "Zweimal frittiert, Meersalz, Hausmayonnaise.",
-        price: 3.9,
-        preparationTime: 8,
-        allergens: ["eggs"],
-        isVegetarian: true,
-        isGlutenFree: true,
-        calories: 420,
-      },
-      {
-        name: "Sweet Potato Fries",
-        nameDe: "Süßkartoffel-Pommes",
-        description: "Sweet potato, paprika salt, chipotle dip.",
-        descriptionDe: "Süßkartoffel, Paprikasalz, Chipotle-Dip.",
-        price: 4.9,
-        preparationTime: 9,
-        allergens: ["eggs"],
-        isVegetarian: true,
-        isGlutenFree: true,
-        calories: 460,
-      },
-      {
-        name: "Onion Rings",
-        nameDe: "Zwiebelringe",
-        description: "Beer-battered, eight per portion, barbecue dip.",
-        descriptionDe: "Bierteig, acht Stück, Barbecue-Dip.",
-        price: 4.5,
-        preparationTime: 8,
-        allergens: ["gluten", "milk"],
-        isVegetarian: true,
-        calories: 480,
-      },
-      {
-        name: "Coleslaw",
-        nameDe: "Krautsalat",
-        description: "White cabbage, carrot, buttermilk dressing.",
-        descriptionDe: "Weißkohl, Karotte, Buttermilch-Dressing.",
-        price: 3.5,
-        preparationTime: 4,
-        allergens: ["milk", "mustard"],
-        isVegetarian: true,
-        isGlutenFree: true,
-        calories: 210,
-      },
-    ],
-  },
-  {
-    category: "Desserts",
-    categoryDe: "Desserts",
-    description: "Save room",
-    descriptionDe: "Lass Platz",
-    items: [
-      {
-        name: "New York Cheesecake",
-        nameDe: "New York Cheesecake",
-        description: "Creamy, dense, with berry compote.",
-        descriptionDe: "Cremig, kompakt, mit Beerenkompott.",
-        price: 5.5,
-        preparationTime: 4,
-        allergens: ["gluten", "milk", "eggs"],
-        isVegetarian: true,
-        calories: 480,
-      },
-      {
-        name: "Brownie",
-        nameDe: "Brownie",
-        description: "Warm, dark chocolate, sea salt.",
-        descriptionDe: "Warm, Zartbitterschokolade, Meersalz.",
-        price: 4.5,
-        preparationTime: 5,
-        allergens: ["gluten", "milk", "eggs", "nuts"],
-        isVegetarian: true,
-        calories: 420,
-      },
-    ],
-  },
-  {
-    category: "Drinks",
-    categoryDe: "Getränke",
-    description: "Cold, and within reach",
-    descriptionDe: "Kalt und griffbereit",
-    items: [
-      {
-        name: "Softdrink 0.4l",
-        nameDe: "Softdrink 0,4 l",
-        description: "Cola, lemonade or orange.",
-        descriptionDe: "Cola, Limonade oder Orange.",
-        price: 3.2,
-        preparationTime: 2,
-        allergens: [],
-        isVegan: true,
-        isVegetarian: true,
-        isGlutenFree: true,
-        calories: 160,
-      },
-      {
-        name: "Apfelschorle 0.4l",
-        nameDe: "Apfelschorle 0,4 l",
-        description: "Cloudy apple juice and sparkling water.",
-        descriptionDe: "Naturtrüber Apfelsaft mit Sprudelwasser.",
-        price: 3.2,
-        preparationTime: 2,
-        allergens: [],
-        isVegan: true,
-        isVegetarian: true,
-        isGlutenFree: true,
-        calories: 90,
-      },
-      {
-        name: "Milkshake",
-        nameDe: "Milchshake",
-        description: "Vanilla, chocolate or strawberry.",
-        descriptionDe: "Vanille, Schokolade oder Erdbeere.",
-        price: 4.9,
-        preparationTime: 5,
-        allergens: ["milk"],
-        isVegetarian: true,
-        isGlutenFree: true,
-        calories: 380,
-      },
-      {
-        name: "Pilsner 0.33l",
-        nameDe: "Pils 0,33 l",
-        description: "Crisp, dry, cold.",
-        descriptionDe: "Herb, trocken, kalt.",
-        price: 3.9,
-        preparationTime: 2,
-        allergens: ["gluten"],
-        isVegan: true,
-        isVegetarian: true,
-        calories: 130,
-      },
-    ],
-  },
-];
 
 const REVIEW_SEEDS = [
   { rating: 5, title: "Bester Burger in Frankfurt", comment: "Das Patty war saftig, der Bun frisch und die Sauce hausgemacht — man schmeckt den Unterschied sofort. Auch am vollen Freitagabend ging es schnell." },
@@ -464,103 +175,15 @@ async function main() {
   });
 
   // --- menu ----------------------------------------------------------------
-  const allItems: { id: string; price: number; discountPrice: number | null; name: string; prep: number }[] = [];
-
-  for (const [index, group] of MENU.entries()) {
-    const existing = await prisma.menuCategory.findFirst({
-      where: { restaurantId: restaurant.id, name: group.category },
-    });
-
-    const category =
-      existing ??
-      (await prisma.menuCategory.create({
-        data: {
-          restaurantId: restaurant.id,
-          name: group.category,
-          nameDe: group.categoryDe,
-          description: group.description,
-          descriptionDe: group.descriptionDe,
-          displayOrder: index,
-        },
-      }));
-
-    for (const [itemIndex, item] of group.items.entries()) {
-      const found = await prisma.menuItem.findFirst({
-        where: { restaurantId: restaurant.id, name: item.name },
-      });
-
-      const record =
-        found ??
-        (await prisma.menuItem.create({
-          data: {
-            restaurantId: restaurant.id,
-            categoryId: category.id,
-            name: item.name,
-            nameDe: item.nameDe,
-            description: item.description,
-            descriptionDe: item.descriptionDe,
-            price: item.price,
-            discountPrice: item.discountPrice ?? null,
-            image: imagePath(item.name),
-            isArchived: false,
-            preparationTime: item.preparationTime,
-            displayOrder: itemIndex,
-            allergens: item.allergens,
-            isVegan: item.isVegan ?? false,
-            isVegetarian: item.isVegetarian ?? item.isVegan ?? false,
-            isGlutenFree: item.isGlutenFree ?? false,
-            isSpicy: item.isSpicy ?? false,
-            isFeatured: item.isFeatured ?? false,
-            calories: item.calories ?? null,
-          },
-        }));
-
-      allItems.push({
-        id: record.id,
-        price: Number(record.price),
-        discountPrice: record.discountPrice === null ? null : Number(record.discountPrice),
-        name: record.name,
-        prep: record.preparationTime,
-      });
-    }
-  }
-
-  // --- reconcile: retire anything no longer on the menu ---------------------
-  // Re-running the seed after the menu changes would otherwise leave the old
-  // dishes behind. Items that appear in an order are hidden rather than
-  // deleted, which is the same rule the admin API enforces, so past receipts
-  // keep resolving.
-  const seededNames = new Set(MENU.flatMap((g) => g.items.map((i) => i.name)));
-  const stale = await prisma.menuItem.findMany({
-    where: { restaurantId: restaurant.id, name: { notIn: [...seededNames] } },
-    select: { id: true, name: true, _count: { select: { orderItems: true } } },
-  });
-
-  if (stale.length > 0) {
-    const deletable = stale.filter((i) => i._count.orderItems === 0).map((i) => i.id);
-    const retire = stale.filter((i) => i._count.orderItems > 0).map((i) => i.id);
-
-    await prisma.favorite.deleteMany({ where: { menuItemId: { in: deletable } } });
-    await prisma.menuItem.deleteMany({ where: { id: { in: deletable } } });
-    await prisma.menuItem.updateMany({
-      where: { id: { in: retire } },
-      data: { isArchived: true, isAvailable: false, isFeatured: false },
-    });
-
-    console.log(`Reconciled menu: removed ${deletable.length}, retired ${retire.length}.`);
-  }
-
-  // Empty categories left behind by the reconcile above.
-  const emptyCategories = await prisma.menuCategory.findMany({
-    where: { restaurantId: restaurant.id, items: { none: {} } },
-    select: { id: true },
-  });
-  if (emptyCategories.length > 0) {
-    await prisma.menuCategory.deleteMany({
-      where: { id: { in: emptyCategories.map((c) => c.id) } },
-    });
-    console.log(`Removed ${emptyCategories.length} empty categor${emptyCategories.length === 1 ? "y" : "ies"}.`);
-  }
+  // The menu is hardcoded in lib/menu-data.ts, not seeded — nothing to write
+  // here. Just shape it the way the order-history generator below expects.
+  const allItems = MENU_ITEMS.map((item) => ({
+    id: item.id,
+    price: item.price,
+    discountPrice: item.discountPrice,
+    name: item.name,
+    prep: item.preparationTime,
+  }));
 
   // --- coupons -------------------------------------------------------------
   const now = new Date();
@@ -840,10 +463,7 @@ async function main() {
   }
 
   // --- favourites & a support inquiry --------------------------------------
-  const featured = await prisma.menuItem.findMany({
-    where: { restaurantId: restaurant.id, isFeatured: true },
-    take: 3,
-  });
+  const featured = MENU_ITEMS.filter((item) => item.isFeatured).slice(0, 3);
   for (const item of featured) {
     await prisma.favorite.upsert({
       where: { userId_menuItemId: { userId: customers[0].id, menuItemId: item.id } },
@@ -867,11 +487,11 @@ async function main() {
     });
   }
 
-  const [orderTotal, itemTotal, bookingTotal] = await Promise.all([
+  const [orderTotal, bookingTotal] = await Promise.all([
     prisma.order.count(),
-    prisma.menuItem.count(),
     prisma.tableBooking.count(),
   ]);
+  const itemTotal = MENU_ITEMS.length;
 
   console.log(`
 Seed complete.

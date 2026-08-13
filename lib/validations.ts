@@ -117,50 +117,14 @@ export const addressSchema = z.object({
 // ---------------------------------------------------------------------------
 // Menu
 // ---------------------------------------------------------------------------
+// The menu is hardcoded (see lib/menu-data.ts), so there's no create/update
+// schema for it anymore — just the id shape used to reference an entry there.
 
-export const menuCategorySchema = z.object({
-  name: z.string().trim().min(1, "Name is required").max(80),
-  nameDe: z.string().trim().max(80).optional().or(z.literal("")),
-  description: z.string().trim().max(500).optional().or(z.literal("")),
-  descriptionDe: z.string().trim().max(500).optional().or(z.literal("")),
-  displayOrder: z.coerce.number().int().min(0).default(0),
-  imageUrl: z.string().url().optional().or(z.literal("")),
-  isActive: z.boolean().default(true),
-});
-
-export const menuItemBaseSchema = z.object({
-    categoryId: uuidSchema,
-    name: z.string().trim().min(1, "Name is required").max(120),
-    nameDe: z.string().trim().max(120).optional().or(z.literal("")),
-    description: z.string().trim().max(1000).optional().or(z.literal("")),
-    descriptionDe: z.string().trim().max(1000).optional().or(z.literal("")),
-    price: moneySchema.refine((v) => v > 0, "Price must be greater than zero"),
-    discountPrice: moneySchema.optional().nullable(),
-    image: z.string().url().optional().or(z.literal("")),
-    preparationTime: z.coerce.number().int().min(1).max(240).default(15),
-    displayOrder: z.coerce.number().int().min(0).default(0),
-    isAvailable: z.boolean().default(true),
-    isFeatured: z.boolean().default(false),
-    isVegan: z.boolean().default(false),
-    isVegetarian: z.boolean().default(false),
-    isGlutenFree: z.boolean().default(false),
-    isSpicy: z.boolean().default(false),
-    calories: z.coerce.number().int().min(0).max(10000).optional().nullable(),
-    allergens: z.array(z.string().trim().max(40)).max(20).default([]),
-});
-
-export const menuItemSchema = menuItemBaseSchema
-  .refine(
-    (d) =>
-      d.discountPrice === null ||
-      d.discountPrice === undefined ||
-      d.discountPrice < d.price,
-    { message: "Discount price must be below the regular price", path: ["discountPrice"] },
-  );
+export const menuItemIdSchema = z.string().trim().min(1).max(60);
 
 export const menuQuerySchema = z.object({
   q: z.string().trim().max(80).optional(),
-  categoryId: uuidSchema.optional(),
+  categoryId: menuItemIdSchema.optional(),
   vegan: z.coerce.boolean().optional(),
   vegetarian: z.coerce.boolean().optional(),
   glutenFree: z.coerce.boolean().optional(),
@@ -177,7 +141,7 @@ export const menuQuerySchema = z.object({
 // ---------------------------------------------------------------------------
 
 export const cartLineSchema = z.object({
-  itemId: uuidSchema,
+  itemId: menuItemIdSchema,
   quantity: z.coerce.number().int().min(1, "Quantity must be at least 1").max(50),
   specialNotes: z.string().trim().max(300).optional().or(z.literal("")),
 });
@@ -455,8 +419,6 @@ export type LoginInput = z.infer<typeof loginSchema>;
 export type RegisterInput = z.infer<typeof registerSchema>;
 export type CreateOrderInput = z.infer<typeof createOrderSchema>;
 export type CreateBookingInput = z.infer<typeof createBookingSchema>;
-export type MenuItemInput = z.infer<typeof menuItemSchema>;
-export type MenuCategoryInput = z.infer<typeof menuCategorySchema>;
 export type CouponInput = z.infer<typeof couponSchema>;
 export type AddressInput = z.infer<typeof addressSchema>;
 export type RestaurantSettingsInput = z.infer<typeof restaurantSettingsSchema>;

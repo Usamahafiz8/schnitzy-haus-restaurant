@@ -303,8 +303,6 @@ model Restaurant {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  categories       MenuCategory[]
-  menuItems        MenuItem[]
   orders           Order[]
   bookings         TableBooking[]
   reviews          Review[]
@@ -357,81 +355,18 @@ model RestaurantTable {
 // ---------------------------------------------------------------------------
 // Menu
 // ---------------------------------------------------------------------------
-
-model MenuCategory {
-  id           String  @id @default(uuid()) @db.Uuid
-  restaurantId String  @db.Uuid
-  name         String
-  nameDe       String?
-  description  String?
-  descriptionDe String?
-  displayOrder Int     @default(0)
-  imageUrl     String?
-  isActive     Boolean @default(true)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  restaurant Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
-  items      MenuItem[]
-
-  @@index([restaurantId, displayOrder])
-  @@map("menu_categories")
-}
-
-model MenuItem {
-  id            String  @id @default(uuid()) @db.Uuid
-  restaurantId  String  @db.Uuid
-  categoryId    String  @db.Uuid
-  name          String
-  nameDe        String?
-  description   String? @db.Text
-  descriptionDe String? @db.Text
-
-  price         Decimal  @db.Decimal(10, 2)
-  discountPrice Decimal? @db.Decimal(10, 2)
-
-  image           String?
-  preparationTime Int     @default(15)
-  displayOrder    Int     @default(0)
-
-  /// Temporarily sold out — still on the menu, shown greyed out.
-  isAvailable   Boolean @default(true)
-  /// Taken off the menu for good. Hidden from customers, but kept so past
-  /// orders and best-seller analytics still resolve the dish.
-  isArchived    Boolean @default(false)
-  isFeatured    Boolean @default(false)
-  isVegan       Boolean @default(false)
-  isVegetarian  Boolean @default(false)
-  isGlutenFree  Boolean @default(false)
-  isSpicy       Boolean @default(false)
-  calories      Int?
-
-  /// string[] — e.g. ["gluten", "eggs", "milk"]
-  allergens Json @default("[]")
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  restaurant Restaurant   @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
-  category   MenuCategory @relation(fields: [categoryId], references: [id], onDelete: Restrict)
-  orderItems OrderItem[]
-  favorites  Favorite[]
-
-  @@index([restaurantId, isArchived, isAvailable])
-  @@index([categoryId, displayOrder])
-  @@map("menu_items")
-}
+// The menu itself is hardcoded in lib/menu-data.ts, not stored here. `menuItemId`
+// fields below are plain strings matching an id from that file — not a foreign
+// key — so they're free-standing snapshots rather than joins.
 
 model Favorite {
   id         String @id @default(uuid()) @db.Uuid
   userId     String @db.Uuid
-  menuItemId String @db.Uuid
+  menuItemId String
 
   createdAt DateTime @default(now())
 
-  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  menuItem MenuItem @relation(fields: [menuItemId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, menuItemId])
   @@map("favorites")
@@ -510,7 +445,9 @@ model Order {
 model OrderItem {
   id         String  @id @default(uuid()) @db.Uuid
   orderId    String  @db.Uuid
-  menuItemId String? @db.Uuid
+  /// Id of an entry in lib/menu-data.ts at order time — not a foreign key, so
+  /// editing or removing that entry later never touches past orders.
+  menuItemId String?
 
   name         String
   unitPrice    Decimal @db.Decimal(10, 2)
@@ -518,8 +455,7 @@ model OrderItem {
   lineTotal    Decimal @db.Decimal(10, 2)
   specialNotes String?
 
-  order    Order     @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  menuItem MenuItem? @relation(fields: [menuItemId], references: [id], onDelete: SetNull)
+  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
 
   @@index([orderId])
   @@index([menuItemId])

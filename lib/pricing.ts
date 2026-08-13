@@ -1,5 +1,6 @@
-import type { Coupon, MenuItem, Restaurant } from "@prisma/client";
+import type { Coupon, Restaurant } from "@prisma/client";
 
+import type { MenuItemData } from "@/lib/menu-data";
 import { round2, toNumber } from "@/lib/utils";
 
 export type PriceableLine = {
@@ -36,7 +37,7 @@ export type PricingResult = {
 export class PricingError extends Error {}
 
 /** The price a customer actually pays for an item right now. */
-export function effectivePrice(item: Pick<MenuItem, "price" | "discountPrice">) {
+export function effectivePrice(item: Pick<MenuItemData, "price" | "discountPrice">) {
   const base = toNumber(item.price);
   const discounted = item.discountPrice === null ? null : toNumber(item.discountPrice);
   return discounted !== null && discounted > 0 && discounted < base ? discounted : base;
@@ -64,7 +65,7 @@ export function couponDiscountFor(
  */
 export function priceOrder(params: {
   lines: PriceableLine[];
-  menuItems: MenuItem[];
+  menuItems: MenuItemData[];
   restaurant: Pick<
     Restaurant,
     | "taxRate"

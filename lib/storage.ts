@@ -40,7 +40,7 @@ const s3Configured = () =>
  */
 export async function uploadImage(
   file: File,
-  folder: "menu" | "reviews" | "restaurant" = "menu",
+  folder: "reviews" = "reviews",
 ): Promise<UploadResult> {
   if (!ALLOWED.has(file.type)) {
     throw new UploadError("Only JPEG, PNG, WebP and AVIF images are allowed");

@@ -19,6 +19,7 @@ import { getOrCreateLoyaltyAccount, parseThresholds, recordPoints } from "@/lib/
 import { withinDeliveryRadius } from "@/lib/maps";
 import { captureError } from "@/lib/monitoring";
 import { notifyStaffNewOrder } from "@/lib/notifications";
+import { getMenuItemsByIds } from "@/lib/menu-data";
 import { estimateReadyAt, nextOrderNumber, ORDER_LIST_SELECT } from "@/lib/orders";
 import { PricingError, priceOrder } from "@/lib/pricing";
 import { enforceRateLimit, RATE_LIMITS } from "@/lib/rate-limit";
@@ -78,9 +79,7 @@ export const POST = handler(async (req: Request) => {
     throw badRequest(`${input.orderType.toLowerCase().replace("_", "-")} orders are currently unavailable`);
   }
 
-  const menuItems = await prisma.menuItem.findMany({
-    where: { id: { in: input.items.map((i) => i.itemId) }, restaurantId: restaurant.id },
-  });
+  const menuItems = getMenuItemsByIds(input.items.map((i) => i.itemId));
 
   if (menuItems.length !== new Set(input.items.map((i) => i.itemId)).size) {
     throw badRequest("Some items in your cart are no longer on the menu");

@@ -47,7 +47,6 @@ const NAV: NavEntry[] = [
   { href: "/admin/orders", key: "orders", icon: ShoppingBag, badge: "orders" },
   { href: "/admin/bookings", key: "bookings", icon: CalendarDays, roles: ["ADMIN", "STAFF"] },
   { href: "/admin/tables", key: "tables", icon: LayoutGrid, roles: ["ADMIN", "STAFF"] },
-  { href: "/admin/menu", key: "menu", icon: ChefHat, roles: ["ADMIN", "STAFF", "KITCHEN"] },
   { href: "/admin/reviews", key: "reviews", icon: Star, badge: "reviews", roles: ["ADMIN", "STAFF"] },
   { href: "/admin/loyalty", key: "loyalty", icon: Sparkles, roles: ["ADMIN"] },
   { href: "/admin/coupons", key: "coupons", icon: Ticket, roles: ["ADMIN"] },

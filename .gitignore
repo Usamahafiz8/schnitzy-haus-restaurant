@@ -32,6 +32,8 @@ public/uploads/
 .claude/
 .cursor/
 .aider*
+.agents/
+skills-lock.json
 
 # misc
 .DS_Store

@@ -9,9 +9,8 @@ import { MenuItemCard } from "@/components/customer/menu-item-card";
 import { DishImage } from "@/components/shared/dish-image";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { prisma } from "@/lib/db";
+import { getMenuCategory, getMenuItem, getRelatedMenuItems } from "@/lib/menu-data";
 import { getRestaurant } from "@/lib/restaurant";
-import { serialize } from "@/lib/serialize";
 import { formatCurrency } from "@/lib/utils";
 
 export const revalidate = 60;
@@ -20,19 +19,16 @@ type Props = { params: Promise<{ itemId: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { itemId } = await params;
-  const item = await prisma.menuItem.findUnique({
-    where: { id: itemId },
-    select: { name: true, description: true, image: true },
-  });
+  const item = getMenuItem(itemId);
 
   if (!item) return { title: "Not found" };
 
   return {
     title: item.name,
-    description: item.description ?? undefined,
+    description: item.description || undefined,
     openGraph: {
       title: item.name,
-      description: item.description ?? undefined,
+      description: item.description || undefined,
       images: item.image ? [item.image] : undefined,
     },
   };
@@ -44,36 +40,24 @@ export default async function MenuItemPage({ params }: Props) {
   const t = await getTranslations("menu");
   const restaurant = await getRestaurant();
 
-  const item = await prisma.menuItem.findUnique({
-    where: { id: itemId },
-    include: { category: true },
-  });
+  const item = getMenuItem(itemId);
+  const category = item ? getMenuCategory(item.categoryId) : undefined;
 
-  if (!item || !restaurant) notFound();
+  if (!item || !category || !restaurant) notFound();
 
-  const related = await prisma.menuItem.findMany({
-    where: {
-      categoryId: item.categoryId,
-      id: { not: item.id },
-      isAvailable: true,
-      isArchived: false,
-    },
-    take: 3,
-    orderBy: { displayOrder: "asc" },
-  });
+  const related = getRelatedMenuItems(item, 3);
 
   const name = locale === "de" && item.nameDe ? item.nameDe : item.name;
   const description =
     locale === "de" && item.descriptionDe ? item.descriptionDe : item.description;
-  const categoryName =
-    locale === "de" && item.category.nameDe ? item.category.nameDe : item.category.name;
+  const categoryName = locale === "de" && category.nameDe ? category.nameDe : category.name;
 
-  const price = Number(item.price);
-  const discountPrice = item.discountPrice === null ? null : Number(item.discountPrice);
+  const price = item.price;
+  const discountPrice = item.discountPrice;
   const hasDiscount = discountPrice !== null && discountPrice < price;
   const effectivePrice = hasDiscount ? discountPrice : price;
 
-  const allergens = Array.isArray(item.allergens) ? (item.allergens as string[]) : [];
+  const allergens = item.allergens;
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-6">
@@ -188,7 +172,7 @@ export default async function MenuItemPage({ params }: Props) {
             {related.map((relatedItem) => (
               <MenuItemCard
                 key={relatedItem.id}
-                item={serialize(relatedItem)}
+                item={relatedItem}
                 locale={locale}
                 currency={restaurant.currency}
               />

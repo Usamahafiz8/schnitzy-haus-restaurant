@@ -2,9 +2,8 @@ import type { Metadata } from "next";
 import { getLocale, getTranslations } from "next-intl/server";
 
 import { MenuBrowser } from "@/components/customer/menu-browser";
-import { prisma } from "@/lib/db";
+import { MENU_CATEGORIES, MENU_ITEMS } from "@/lib/menu-data";
 import { getRestaurant } from "@/lib/restaurant";
-import { serialize } from "@/lib/serialize";
 
 export const revalidate = 60;
 
@@ -31,20 +30,14 @@ export default async function MenuPage({
     );
   }
 
-  // The whole menu is a few dozen rows — fetching it once and filtering on the
-  // client makes search and dietary filters instant, with no request per keypress.
-  const [categories, items] = await Promise.all([
-    prisma.menuCategory.findMany({
-      where: { restaurantId: restaurant.id, isActive: true },
-      orderBy: { displayOrder: "asc" },
-    }),
-    prisma.menuItem.findMany({
-      // Archived dishes are off the menu for good; unavailable ones still
-      // show, greyed out, so regulars can see what's sold out today.
-      where: { restaurantId: restaurant.id, isArchived: false },
-      orderBy: [{ displayOrder: "asc" }, { name: "asc" }],
-    }),
-  ]);
+  // The whole menu is a few dozen hardcoded rows — no request per keypress,
+  // search and dietary filters just run against the array on the client.
+  // Unavailable items still show, greyed out, so regulars can see what's sold
+  // out today rather than wondering why a dish vanished.
+  const categories = [...MENU_CATEGORIES].sort((a, b) => a.displayOrder - b.displayOrder);
+  const items = [...MENU_ITEMS].sort(
+    (a, b) => a.displayOrder - b.displayOrder || a.name.localeCompare(b.name),
+  );
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-8">
@@ -54,8 +47,8 @@ export default async function MenuPage({
       </header>
 
       <MenuBrowser
-        categories={serialize(categories)}
-        items={serialize(items)}
+        categories={categories}
+        items={items}
         locale={locale}
         currency={restaurant.currency}
         initialCategory={params.category ?? null}
