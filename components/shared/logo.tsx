@@ -46,20 +46,28 @@ export function Logo({
   className,
   compact = false,
   inverted = false,
+  size = "sm",
 }: {
   className?: string;
   compact?: boolean;
   inverted?: boolean;
+  /** `lg` is the bigger lockup used where the logo stands on its own, e.g. the footer brand column. */
+  size?: "sm" | "lg";
 }) {
   return (
-    <span className={cn("inline-flex flex-col items-center leading-none", className)}>
+    <span className={cn(" flex-col items-center leading-none", className)}>
       <LogoMark
-        className={cn("h-6 w-auto", inverted ? "text-white" : "text-primary")}
+        className={cn(
+          size === "lg" ? "h-9" : "h-6",
+          "w-auto",
+          inverted ? "text-white" : "text-primary",
+        )}
       />
 
       <span
         className={cn(
-          "mt-1 font-display text-xl tracking-tight",
+          "mt-1 font-display tracking-tight",
+          size === "lg" ? "text-3xl" : "text-xl",
           inverted ? "text-white" : "text-foreground",
         )}
       >
@@ -70,7 +78,8 @@ export function Logo({
       {!compact && (
         <span
           className={cn(
-            "mt-1 flex w-full items-center gap-1.5 text-[8px] font-semibold uppercase tracking-[0.14em]",
+            "mt-1 flex w-full items-center gap-1.5 font-semibold uppercase tracking-[0.14em]",
+            size === "lg" ? "text-[10px]" : "text-[8px]",
             inverted ? "text-white/70" : "text-muted-foreground",
           )}
         >

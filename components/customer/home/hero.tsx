@@ -16,7 +16,7 @@ export async function Hero() {
             {t("heroKicker")}
           </p>
 
-          <h1 className="mt-1 font-display text-[clamp(3rem,11vw,5.75rem)] leading-[0.86] text-foreground">
+          <h1 className="mt-1 font-display text-[clamp(3rem,11vw,5.75rem)] leading-[0.86]">
             {t("heroLine1")}
             <br />
             <span className="text-primary">{t("heroLine2")}</span>

@@ -50,7 +50,7 @@ export async function SiteFooter({
       <div className="mx-auto grid max-w-7xl gap-10 px-4 py-12 sm:grid-cols-2 sm:px-6 lg:grid-cols-[1.1fr_1fr_1fr_1.2fr_1fr]">
         {/* ------------------------------------------------------------ brand */}
         <div>
-          <Logo />
+          <Logo size="lg" className="items-start" />
 
           <ul className="mt-5 flex gap-3">
             {SOCIALS.map(({ name, href, Icon }) => (
