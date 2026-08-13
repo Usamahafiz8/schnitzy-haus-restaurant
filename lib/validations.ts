@@ -357,43 +357,11 @@ export const updateStaffSchema = z.object({
   isDeleted: z.boolean().optional(),
 });
 
-const dayHoursSchema = z.object({
-  open: timeSchema,
-  close: timeSchema,
-  closed: z.boolean().default(false),
-});
-
-export const restaurantSettingsSchema = z.object({
-  name: z.string().trim().min(1).max(120).optional(),
-  description: z.string().trim().max(2000).optional(),
-  email: emailSchema.optional(),
-  phone: phoneSchema.optional(),
-  whatsappNumber: phoneSchema.optional().or(z.literal("")),
-  address: z.string().trim().max(200).optional(),
-  city: z.string().trim().max(80).optional(),
-  postalCode: z.string().trim().max(12).optional(),
-  country: z.string().trim().max(2).optional(),
-  latitude: z.number().min(-90).max(90).optional(),
-  longitude: z.number().min(-180).max(180).optional(),
-  cuisineType: z.string().trim().max(60).optional(),
-  logoUrl: z.string().url().optional().or(z.literal("")),
-  bannerUrl: z.string().url().optional().or(z.literal("")),
-  openingHours: z.record(z.string(), dayHoursSchema).optional(),
-  taxRate: z.coerce.number().min(0).max(100).optional(),
-  deliveryEnabled: z.boolean().optional(),
-  pickupEnabled: z.boolean().optional(),
-  dineInEnabled: z.boolean().optional(),
-  deliveryFee: moneySchema.optional(),
-  freeDeliveryOver: moneySchema.optional().nullable(),
-  deliveryRadiusKm: z.coerce.number().min(0).max(100).optional(),
-  minOrderAmount: moneySchema.optional(),
-  pointsPerCurrency: z.coerce.number().min(0).max(100).optional(),
-  pointsPerDiscountUnit: z.coerce.number().int().min(1).max(10000).optional(),
-  bookingSlotMinutes: z.coerce.number().int().min(5).max(120).optional(),
-  bookingMaxGuests: z.coerce.number().int().min(1).max(100).optional(),
-  bookingLeadHours: z.coerce.number().int().min(0).max(72).optional(),
-  bookingDurationMins: z.coerce.number().int().min(15).max(360).optional(),
-  isActive: z.boolean().optional(),
+// The restaurant's profile (name, hours, fees, tax rate, ...) is hardcoded in
+// lib/restaurant-config.ts now — nothing to validate for it. `isActive` is
+// the one field that's still a live, database-backed switch.
+export const restaurantStatusSchema = z.object({
+  isActive: z.boolean(),
 });
 
 export const inquirySchema = z.object({
@@ -421,5 +389,5 @@ export type CreateOrderInput = z.infer<typeof createOrderSchema>;
 export type CreateBookingInput = z.infer<typeof createBookingSchema>;
 export type CouponInput = z.infer<typeof couponSchema>;
 export type AddressInput = z.infer<typeof addressSchema>;
-export type RestaurantSettingsInput = z.infer<typeof restaurantSettingsSchema>;
+export type RestaurantStatusInput = z.infer<typeof restaurantStatusSchema>;
 export type StaffInput = z.infer<typeof staffSchema>;

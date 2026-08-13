@@ -9,6 +9,7 @@ import { PrismaClient, type OrderStatus } from "@prisma/client";
 import bcrypt from "bcryptjs";
 
 import { MENU_ITEMS } from "../lib/menu-data";
+import { RESTAURANT_CONFIG } from "../lib/restaurant-config";
 
 const prisma = new PrismaClient();
 
@@ -33,16 +34,6 @@ function dateKey(d: Date) {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 }
 
-const OPENING_HOURS = {
-  monday: { open: "11:00", close: "23:00", closed: false },
-  tuesday: { open: "11:00", close: "23:00", closed: false },
-  wednesday: { open: "11:00", close: "23:00", closed: false },
-  thursday: { open: "11:00", close: "23:00", closed: false },
-  friday: { open: "11:00", close: "23:00", closed: false },
-  saturday: { open: "11:00", close: "23:00", closed: false },
-  sunday: { open: "11:00", close: "23:00", closed: false },
-};
-
 const REVIEW_SEEDS = [
   { rating: 5, title: "Bester Burger in Frankfurt", comment: "Das Patty war saftig, der Bun frisch und die Sauce hausgemacht — man schmeckt den Unterschied sofort. Auch am vollen Freitagabend ging es schnell." },
   { rating: 5, title: "Der Schnitzel Burger ist eine Wucht", comment: "Knusprig bis zum Rand, dazu ordentlich Salat. Genau das, was man sich vorstellt, wenn Schnitzel auf Burger trifft." },
@@ -58,44 +49,12 @@ async function main() {
   console.log("Seeding Schnitzy Haus…");
 
   // --- restaurant ----------------------------------------------------------
-  const profile = {
-    name: "Schnitzy Haus",
-    description:
-      "Frankfurts Home of Premium Burgers. Handgemachte Burger, knusprige Schnitzel und frische Bowls — auf Bestellung zubereitet.",
-    email: "info@schnitzyhaus.de",
-    phone: "+49 69 12345678",
-    whatsappNumber: "+49 69 12345678",
-    address: "Berger Straße 123",
-    city: "Frankfurt am Main",
-    postalCode: "60316",
-    country: "DE",
-    // Berger Straße, Frankfurt-Nordend.
-    latitude: 50.1268,
-    longitude: 8.7047,
-    openingHours: OPENING_HOURS,
-    cuisineType: "Burgers & Bowls",
-  };
-
+  // The profile lives in lib/restaurant-config.ts now — this row is just the
+  // FK anchor every order/booking/review/etc. points at, plus `isActive`.
   const restaurant = await prisma.restaurant.upsert({
     where: { slug: SLUG },
-    // Reconcile the public profile every run so edits here actually land.
-    update: profile,
-    create: {
-      slug: SLUG,
-      ...profile,
-      currency: "EUR",
-      taxRate: 19,
-      deliveryFee: 3.5,
-      freeDeliveryOver: 45,
-      minOrderAmount: 15,
-      deliveryRadiusKm: 8,
-      pointsPerCurrency: 1,
-      pointsPerDiscountUnit: 100,
-      bookingSlotMinutes: 30,
-      bookingMaxGuests: 12,
-      bookingLeadHours: 1,
-      bookingDurationMins: 90,
-    },
+    update: {},
+    create: { slug: SLUG },
   });
 
   // --- tables --------------------------------------------------------------
@@ -495,7 +454,7 @@ async function main() {
 
   console.log(`
 Seed complete.
-  restaurant   ${restaurant.name} (${restaurant.slug})
+  restaurant   ${RESTAURANT_CONFIG.name} (${restaurant.slug})
   menu items   ${itemTotal}
   orders       ${orderTotal}
   bookings     ${bookingTotal}

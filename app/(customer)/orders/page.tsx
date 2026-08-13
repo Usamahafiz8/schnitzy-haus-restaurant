@@ -11,6 +11,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/misc";
 import { currentUser } from "@/lib/api";
 import { prisma } from "@/lib/db";
+import { RESTAURANT_CONFIG } from "@/lib/restaurant-config";
 import { serialize } from "@/lib/serialize";
 import { formatCurrency, formatDateTime } from "@/lib/utils";
 
@@ -35,7 +36,6 @@ export default async function OrdersPage() {
     include: {
       items: true,
       review: { select: { id: true, rating: true } },
-      restaurant: { select: { currency: true } },
     },
   });
 
@@ -83,7 +83,7 @@ export default async function OrdersPage() {
                   <div className="flex shrink-0 items-center gap-2">
                     <OrderStatusBadge status={order.status} />
                     <span className="font-semibold">
-                      {formatCurrency(order.totalAmount, locale, order.restaurant.currency)}
+                      {formatCurrency(order.totalAmount, locale, RESTAURANT_CONFIG.currency)}
                     </span>
                   </div>
                 </div>

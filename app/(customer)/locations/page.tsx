@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { directionsUrl, staticEmbedUrl } from "@/lib/maps";
-import { prisma } from "@/lib/db";
+import { getRestaurant } from "@/lib/restaurant";
 import { isOpenAt, type OpeningHours } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
@@ -25,12 +25,11 @@ export default async function LocationsPage() {
   const tLocation = await getTranslations("location");
   const tFooter = await getTranslations("footer");
 
-  // Multi-tenant-ready: every active restaurant renders as its own card, so
-  // opening a second branch needs no code change here.
-  const restaurants = await prisma.restaurant.findMany({
-    where: { isActive: true },
-    orderBy: { createdAt: "asc" },
-  });
+  // One hardcoded location today (see lib/restaurant-config.ts). Kept as a
+  // list of one rather than a single hardcoded card so a second location
+  // later is a data change, not a rewrite of this page.
+  const restaurant = await getRestaurant();
+  const restaurants = restaurant?.isActive ? [restaurant] : [];
 
   return (
     <>

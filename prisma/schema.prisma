@@ -255,82 +255,29 @@ model Address {
 // Restaurant
 // ---------------------------------------------------------------------------
 
+/// The profile (name, address, hours, fees, tax rate, loyalty rates, ...) is
+/// hardcoded in lib/restaurant-config.ts, not stored here — one location,
+/// rarely changes, no admin form needed. This row exists only as the FK
+/// anchor the tables below need, and to hold `isActive`, the one thing that
+/// *is* still live: a "stop accepting orders right now" switch staff can
+/// flip from /admin/settings without a deploy.
 model Restaurant {
-  id             String  @id @default(uuid()) @db.Uuid
-  slug           String  @unique
-  name           String
-  description    String? @db.Text
-  email          String
-  phone          String
-  whatsappNumber String?
-  address        String
-  city           String  @default("")
-  postalCode     String  @default("")
-  country        String  @default("DE")
-  latitude       Float?
-  longitude      Float?
-
-  /// { "monday": { "open": "11:00", "close": "22:00", "closed": false }, ... }
-  openingHours Json @default("{}")
-
-  cuisineType String  @default("German")
-  logoUrl     String?
-  bannerUrl   String?
-
-  stripeAccountId String?
-  currency        String @default("EUR")
-  taxRate         Decimal @default(19.00) @db.Decimal(5, 2)
-
-  deliveryEnabled  Boolean @default(true)
-  pickupEnabled    Boolean @default(true)
-  dineInEnabled    Boolean @default(true)
-  deliveryFee      Decimal @default(3.50) @db.Decimal(10, 2)
-  freeDeliveryOver Decimal? @db.Decimal(10, 2)
-  deliveryRadiusKm Float   @default(8)
-  minOrderAmount   Decimal @default(10.00) @db.Decimal(10, 2)
-
-  /// Loyalty configuration: points earned per currency unit spent, redemption rate, tier thresholds.
-  pointsPerCurrency Decimal @default(1.00) @db.Decimal(10, 2)
-  pointsPerDiscountUnit Int  @default(100) // 100 points === 1 currency unit
-  tierThresholds    Json    @default("{\"SILVER\":250,\"GOLD\":1000,\"PLATINUM\":2500}")
-
-  bookingSlotMinutes  Int @default(30)
-  bookingMaxGuests    Int @default(12)
-  bookingLeadHours    Int @default(1)
-  bookingDurationMins Int @default(90)
+  id   String @id @default(uuid()) @db.Uuid
+  slug String @unique
 
   isActive  Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  orders           Order[]
-  bookings         TableBooking[]
-  reviews          Review[]
-  loyaltyAccounts  LoyaltyAccount[]
-  coupons          Coupon[]
-  tables           RestaurantTable[]
-  deliveryZones    DeliveryZone[]
-  inquiries        Inquiry[]
+  orders          Order[]
+  bookings        TableBooking[]
+  reviews         Review[]
+  loyaltyAccounts LoyaltyAccount[]
+  coupons         Coupon[]
+  tables          RestaurantTable[]
+  inquiries       Inquiry[]
 
   @@map("restaurants")
-}
-
-model DeliveryZone {
-  id           String  @id @default(uuid()) @db.Uuid
-  restaurantId String  @db.Uuid
-  name         String
-  postalCodes  String[]
-  fee          Decimal @db.Decimal(10, 2)
-  minOrder     Decimal @default(0) @db.Decimal(10, 2)
-  isActive     Boolean @default(true)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  restaurant Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
-
-  @@index([restaurantId])
-  @@map("delivery_zones")
 }
 
 model RestaurantTable {

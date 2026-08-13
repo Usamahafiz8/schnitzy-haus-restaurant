@@ -10,6 +10,7 @@ import {
   parseBody,
 } from "@/lib/api";
 import { prisma } from "@/lib/db";
+import { RESTAURANT_CONFIG } from "@/lib/restaurant-config";
 import { isStripeEnabled, requireStripe, toMinorUnits } from "@/lib/stripe";
 import { toNumber } from "@/lib/utils";
 import { STAFF_ROLES } from "@/types";
@@ -29,10 +30,7 @@ export const POST = handler(async (req: Request) => {
   const { orderId } = await parseBody(req, schema);
   const user = await currentUser();
 
-  const order = await prisma.order.findUnique({
-    where: { id: orderId },
-    include: { restaurant: { select: { currency: true, id: true } } },
-  });
+  const order = await prisma.order.findUnique({ where: { id: orderId } });
 
   if (!order) throw notFound("We couldn't find that order");
 
@@ -74,12 +72,12 @@ export const POST = handler(async (req: Request) => {
 
   const intent = await client.paymentIntents.create({
     amount,
-    currency: order.restaurant.currency.toLowerCase(),
+    currency: RESTAURANT_CONFIG.currency.toLowerCase(),
     automatic_payment_methods: { enabled: true },
     metadata: {
       orderId: order.id,
       orderNumber: order.orderNumber,
-      restaurantId: order.restaurant.id,
+      restaurantId: order.restaurantId,
     },
     receipt_email: order.customerEmail,
     description: `Schnitzy Haus ${order.orderNumber}`,

@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { currentUser } from "@/lib/api";
 import { prisma } from "@/lib/db";
+import { RESTAURANT_CONFIG } from "@/lib/restaurant-config";
 import { serialize } from "@/lib/serialize";
 import { formatCurrency, formatDateTime } from "@/lib/utils";
 import { STAFF_ROLES } from "@/types";
@@ -32,7 +33,6 @@ export default async function OrderConfirmationPage({
     include: {
       items: true,
       statusHistory: { orderBy: { createdAt: "asc" } },
-      restaurant: { select: { currency: true, name: true, phone: true } },
     },
   });
 
@@ -83,7 +83,7 @@ export default async function OrderConfirmationPage({
                   )}
                 </span>
                 <span className="shrink-0 tabular-nums">
-                  {formatCurrency(item.lineTotal, locale, order.restaurant.currency)}
+                  {formatCurrency(item.lineTotal, locale, RESTAURANT_CONFIG.currency)}
                 </span>
               </li>
             ))}
@@ -92,35 +92,35 @@ export default async function OrderConfirmationPage({
           <div className="mt-4 space-y-1 border-t border-border pt-4 text-sm">
             <Row
               label={tCommon("subtotal")}
-              value={formatCurrency(order.subtotal, locale, order.restaurant.currency)}
+              value={formatCurrency(order.subtotal, locale, RESTAURANT_CONFIG.currency)}
             />
             {Number(order.deliveryFee) > 0 && (
               <Row
                 label={tCommon("delivery")}
-                value={formatCurrency(order.deliveryFee, locale, order.restaurant.currency)}
+                value={formatCurrency(order.deliveryFee, locale, RESTAURANT_CONFIG.currency)}
               />
             )}
             {Number(order.discountAmount) > 0 && (
               <Row
                 label={tCommon("discount")}
-                value={`−${formatCurrency(order.discountAmount, locale, order.restaurant.currency)}`}
+                value={`−${formatCurrency(order.discountAmount, locale, RESTAURANT_CONFIG.currency)}`}
               />
             )}
             {Number(order.tipAmount) > 0 && (
               <Row
                 label={tCommon("tip")}
-                value={formatCurrency(order.tipAmount, locale, order.restaurant.currency)}
+                value={formatCurrency(order.tipAmount, locale, RESTAURANT_CONFIG.currency)}
               />
             )}
             <div className="flex justify-between pt-1 text-base font-semibold">
               <span>{tCommon("total")}</span>
               <span>
-                {formatCurrency(order.totalAmount, locale, order.restaurant.currency)}
+                {formatCurrency(order.totalAmount, locale, RESTAURANT_CONFIG.currency)}
               </span>
             </div>
             <p className="text-xs text-muted-foreground">
               {tCommon("tax")} ·{" "}
-              {formatCurrency(order.tax, locale, order.restaurant.currency)}
+              {formatCurrency(order.tax, locale, RESTAURANT_CONFIG.currency)}
             </p>
           </div>
 

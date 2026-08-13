@@ -1,8 +1,7 @@
 import "server-only";
 
-import type { Restaurant } from "@prisma/client";
-
 import { prisma } from "@/lib/db";
+import type { RestaurantConfig } from "@/lib/restaurant-config";
 import type { TimeSlot } from "@/types";
 import {
   WEEKDAYS,
@@ -33,14 +32,9 @@ export function resolveBookingInstant(
 }
 
 type BookingRestaurant = Pick<
-  Restaurant,
-  | "id"
-  | "openingHours"
-  | "bookingSlotMinutes"
-  | "bookingMaxGuests"
-  | "bookingLeadHours"
-  | "bookingDurationMins"
->;
+  RestaurantConfig,
+  "openingHours" | "bookingSlotMinutes" | "bookingMaxGuests" | "bookingLeadHours" | "bookingDurationMins"
+> & { id: string };
 
 /** Every slot the restaurant is open for on this date, ignoring occupancy. */
 export function slotsForDate(

@@ -18,6 +18,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { currentUser } from "@/lib/api";
 import { prisma } from "@/lib/db";
 import { CUSTOMER_CANCELLABLE } from "@/lib/orders";
+import { RESTAURANT_CONFIG } from "@/lib/restaurant-config";
 import { serialize } from "@/lib/serialize";
 import { formatCurrency, formatDateTime } from "@/lib/utils";
 import { STAFF_ROLES } from "@/types";
@@ -41,7 +42,6 @@ export default async function OrderDetailPage({
       items: true,
       statusHistory: { orderBy: { createdAt: "asc" } },
       review: { select: { id: true, rating: true } },
-      restaurant: { select: { currency: true, name: true, phone: true, address: true } },
     },
   });
 
@@ -104,7 +104,7 @@ export default async function OrderDetailPage({
                   )}
                 </span>
                 <span className="shrink-0 tabular-nums">
-                  {formatCurrency(item.lineTotal, locale, order.restaurant.currency)}
+                  {formatCurrency(item.lineTotal, locale, RESTAURANT_CONFIG.currency)}
                 </span>
               </li>
             ))}
@@ -113,33 +113,33 @@ export default async function OrderDetailPage({
           <dl className="mt-4 space-y-1 border-t border-border pt-4 text-sm">
             <Row
               label={tCommon("subtotal")}
-              value={formatCurrency(order.subtotal, locale, order.restaurant.currency)}
+              value={formatCurrency(order.subtotal, locale, RESTAURANT_CONFIG.currency)}
             />
             {Number(order.deliveryFee) > 0 && (
               <Row
                 label={tCommon("delivery")}
-                value={formatCurrency(order.deliveryFee, locale, order.restaurant.currency)}
+                value={formatCurrency(order.deliveryFee, locale, RESTAURANT_CONFIG.currency)}
               />
             )}
             {Number(order.discountAmount) > 0 && (
               <Row
                 label={`${tCommon("discount")}${order.couponCode ? ` (${order.couponCode})` : ""}`}
-                value={`−${formatCurrency(order.discountAmount, locale, order.restaurant.currency)}`}
+                value={`−${formatCurrency(order.discountAmount, locale, RESTAURANT_CONFIG.currency)}`}
               />
             )}
             {Number(order.tipAmount) > 0 && (
               <Row
                 label={tCommon("tip")}
-                value={formatCurrency(order.tipAmount, locale, order.restaurant.currency)}
+                value={formatCurrency(order.tipAmount, locale, RESTAURANT_CONFIG.currency)}
               />
             )}
             <div className="flex justify-between pt-1 text-base font-semibold">
               <dt>{tCommon("total")}</dt>
-              <dd>{formatCurrency(order.totalAmount, locale, order.restaurant.currency)}</dd>
+              <dd>{formatCurrency(order.totalAmount, locale, RESTAURANT_CONFIG.currency)}</dd>
             </div>
             <p className="text-xs text-muted-foreground">
               {tCommon("tax")} ·{" "}
-              {formatCurrency(order.tax, locale, order.restaurant.currency)} ·{" "}
+              {formatCurrency(order.tax, locale, RESTAURANT_CONFIG.currency)} ·{" "}
               {order.paymentMethod === "STRIPE" ? "Card" : "Cash"}
             </p>
           </dl>
@@ -190,9 +190,9 @@ export default async function OrderDetailPage({
         <PrintButton label={t("printReceipt")} />
 
         <Button size="sm" variant="ghost" asChild>
-          <a href={`tel:${order.restaurant.phone.replace(/\s/g, "")}`}>
+          <a href={`tel:${RESTAURANT_CONFIG.phone.replace(/\s/g, "")}`}>
             <Phone aria-hidden />
-            {order.restaurant.phone}
+            {RESTAURANT_CONFIG.phone}
           </a>
         </Button>
 

@@ -1,7 +1,8 @@
-import { Prisma, type Coupon, type Restaurant } from "@prisma/client";
+import { Prisma, type Coupon } from "@prisma/client";
 
 import { couponDiscountFor, effectivePrice, priceOrder, PricingError } from "@/lib/pricing";
 import type { MenuItemData } from "@/lib/menu-data";
+import type { RestaurantPricingConfig } from "@/lib/restaurant-config";
 
 const decimal = (value: number) => new Prisma.Decimal(value);
 
@@ -30,22 +31,14 @@ function makeItem(overrides: Partial<MenuItemData> = {}): MenuItemData {
   };
 }
 
-const restaurant = {
-  taxRate: decimal(19),
-  deliveryFee: decimal(3.5),
-  freeDeliveryOver: decimal(45),
-  minOrderAmount: decimal(15),
-  pointsPerCurrency: decimal(1),
+const restaurant: RestaurantPricingConfig = {
+  taxRate: 19,
+  deliveryFee: 3.5,
+  freeDeliveryOver: 45,
+  minOrderAmount: 15,
+  pointsPerCurrency: 1,
   pointsPerDiscountUnit: 100,
-} as unknown as Pick<
-  Restaurant,
-  | "taxRate"
-  | "deliveryFee"
-  | "freeDeliveryOver"
-  | "minOrderAmount"
-  | "pointsPerCurrency"
-  | "pointsPerDiscountUnit"
->;
+};
 
 function makeCoupon(overrides: Partial<Coupon> = {}): Coupon {
   return {

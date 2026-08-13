@@ -1,6 +1,7 @@
 import type { LoyaltyTier, Prisma, PrismaClient } from "@prisma/client";
 
 import { prisma } from "@/lib/db";
+import { RESTAURANT_CONFIG } from "@/lib/restaurant-config";
 import { toNumber } from "@/lib/utils";
 
 type Db = PrismaClient | Prisma.TransactionClient;
@@ -162,21 +163,17 @@ export async function recordPoints(
 }
 
 export async function loyaltySummary(restaurantId: string, customerId: string) {
-  const [account, restaurant] = await Promise.all([
-    prisma.loyaltyAccount.findUnique({
-      where: { restaurantId_customerId: { restaurantId, customerId } },
-    }),
-    prisma.restaurant.findUnique({
-      where: { id: restaurantId },
-      select: { tierThresholds: true, pointsPerDiscountUnit: true, pointsPerCurrency: true },
-    }),
-  ]);
+  // Loyalty rates and tier thresholds are hardcoded (lib/restaurant-config.ts)
+  // now — only the account balance itself is still a database lookup.
+  const account = await prisma.loyaltyAccount.findUnique({
+    where: { restaurantId_customerId: { restaurantId, customerId } },
+  });
 
-  const thresholds = parseThresholds(restaurant?.tierThresholds);
+  const thresholds = parseThresholds(RESTAURANT_CONFIG.tierThresholds);
   const points = account?.points ?? 0;
   const totalSpent = toNumber(account?.totalSpent ?? 0);
   const tier = account?.tier ?? "BRONZE";
-  const pointsPerUnit = restaurant?.pointsPerDiscountUnit ?? 100;
+  const pointsPerUnit = RESTAURANT_CONFIG.pointsPerDiscountUnit;
 
   return {
     points,
@@ -186,7 +183,7 @@ export async function loyaltySummary(restaurantId: string, customerId: string) {
     orderCount: account?.orderCount ?? 0,
     pointsValue: Math.floor((points / pointsPerUnit) * 100) / 100,
     pointsPerDiscountUnit: pointsPerUnit,
-    pointsPerCurrency: toNumber(restaurant?.pointsPerCurrency ?? 1),
+    pointsPerCurrency: RESTAURANT_CONFIG.pointsPerCurrency,
     benefits: TIER_BENEFITS[tier],
     thresholds,
     ...progressToNextTier(totalSpent, tier, thresholds),

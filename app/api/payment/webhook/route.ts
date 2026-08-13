@@ -4,6 +4,7 @@ import { prisma } from "@/lib/db";
 import { parseThresholds, recordPoints } from "@/lib/loyalty";
 import { captureError, captureMessage } from "@/lib/monitoring";
 import { notifyOrderStatus } from "@/lib/notifications";
+import { RESTAURANT_CONFIG } from "@/lib/restaurant-config";
 import { stripe } from "@/lib/stripe";
 import { toNumber } from "@/lib/utils";
 
@@ -68,7 +69,6 @@ async function handleSucceeded(intent: Stripe.PaymentIntent) {
     where: { id: orderId },
     include: {
       customer: { select: { locale: true } },
-      restaurant: { select: { tierThresholds: true } },
     },
   });
 
@@ -113,7 +113,7 @@ async function handleSucceeded(intent: Stripe.PaymentIntent) {
           orderId,
           note: `Earned on ${order.orderNumber}`,
           spendDelta: toNumber(order.totalAmount),
-          thresholds: parseThresholds(order.restaurant.tierThresholds),
+          thresholds: parseThresholds(RESTAURANT_CONFIG.tierThresholds),
         });
       }
     }

@@ -127,19 +127,12 @@ export function estimateReadyAt(params: {
   return new Date(Date.now() + (base + travel) * 60_000);
 }
 
+// The restaurant's profile (name, phone, currency, ...) is hardcoded now —
+// see lib/restaurant-config.ts — so it's no longer part of this include.
 export const ORDER_DETAIL_INCLUDE = {
   items: true,
   statusHistory: { orderBy: { createdAt: "asc" } },
   review: true,
-  restaurant: {
-    select: {
-      name: true,
-      phone: true,
-      whatsappNumber: true,
-      address: true,
-      currency: true,
-    },
-  },
 } satisfies Prisma.OrderInclude;
 
 export const ORDER_LIST_SELECT = {

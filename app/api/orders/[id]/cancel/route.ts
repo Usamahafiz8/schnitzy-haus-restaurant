@@ -13,6 +13,7 @@ import { parseThresholds, recordPoints } from "@/lib/loyalty";
 import { captureError } from "@/lib/monitoring";
 import { notifyOrderStatus } from "@/lib/notifications";
 import { assertCustomerCanCancel, assertTransition } from "@/lib/orders";
+import { RESTAURANT_CONFIG } from "@/lib/restaurant-config";
 import { stripe } from "@/lib/stripe";
 import { cancelOrderSchema } from "@/lib/validations";
 import { STAFF_ROLES } from "@/types";
@@ -33,7 +34,6 @@ export const POST = handler(async (req: Request, { params }: Params) => {
     include: {
       redemption: true,
       customer: { select: { locale: true } },
-      restaurant: { select: { id: true, tierThresholds: true } },
     },
   });
 
@@ -119,7 +119,7 @@ export const POST = handler(async (req: Request, { params }: Params) => {
 
     // Return spent points and claw back anything already earned.
     if (order.customerId) {
-      const thresholds = parseThresholds(order.restaurant.tierThresholds);
+      const thresholds = parseThresholds(RESTAURANT_CONFIG.tierThresholds);
 
       if (order.pointsRedeemed > 0) {
         await recordPoints(tx, {

@@ -1,6 +1,7 @@
-import type { Coupon, Restaurant } from "@prisma/client";
+import type { Coupon } from "@prisma/client";
 
 import type { MenuItemData } from "@/lib/menu-data";
+import type { RestaurantPricingConfig } from "@/lib/restaurant-config";
 import { round2, toNumber } from "@/lib/utils";
 
 export type PriceableLine = {
@@ -66,15 +67,7 @@ export function couponDiscountFor(
 export function priceOrder(params: {
   lines: PriceableLine[];
   menuItems: MenuItemData[];
-  restaurant: Pick<
-    Restaurant,
-    | "taxRate"
-    | "deliveryFee"
-    | "freeDeliveryOver"
-    | "minOrderAmount"
-    | "pointsPerCurrency"
-    | "pointsPerDiscountUnit"
-  >;
+  restaurant: RestaurantPricingConfig;
   orderType: "PICKUP" | "DELIVERY" | "DINE_IN";
   coupon?: Coupon | null;
   pointsToRedeem?: number;
