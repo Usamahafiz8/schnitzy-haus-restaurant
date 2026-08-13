@@ -28,6 +28,9 @@ playwright/.cache/
 # uploads written by the local storage fallback
 public/uploads/
 
+# local-only design references (not site assets)
+/reference/
+
 # local editor/tooling state
 .claude/
 .cursor/

@@ -10,12 +10,6 @@ export async function Hero() {
 
   return (
     <section className="relative overflow-hidden bg-cream-100">
-      {/* Warm bloom behind the product shot. */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute -right-40 top-0 hidden size-[42rem] rounded-full bg-brand-100/50 blur-3xl lg:block"
-      />
-
       <div className="relative mx-auto grid max-w-7xl items-center gap-10 px-4 py-12 sm:px-6 lg:grid-cols-[1fr_1.05fr] lg:gap-6 lg:py-16">
         <div className="max-w-xl">
           <p className="script text-3xl text-primary sm:text-4xl">
@@ -61,15 +55,15 @@ export async function Hero() {
         </div>
 
         {/* --------------------------------------------------------- product */}
-        <div className="relative">
+        <div className="relative flex justify-center lg:justify-end">
           <Image
-            src="/images/hero-burger.jpg"
+            src="/images/hero-burger.png"
             alt={t("heroImageAlt")}
-            width={1200}
-            height={900}
+            width={617}
+            height={494}
             priority
-            sizes="(max-width: 1024px) 100vw, 640px"
-            className="h-auto w-full object-contain"
+            sizes="(max-width: 1024px) 90vw, 640px"
+            className="h-auto w-full max-w-md object-contain drop-shadow-2xl lg:max-w-2xl"
           />
         </div>
       </div>
